@@ -1,26 +1,40 @@
 package com.studiopixmix.playaround {
+	import flash.events.StatusEvent;
 	import flash.external.ExtensionContext;
 	import flash.system.Capabilities;
 	
 	/**
 	 * The Playaround extension. Before trying to do anything (even checking for compatibility), you must initialize the 
-	 * extension. Once initialized, use <code>isCompatible()</code> to check for compatibility with the current OS before
-	 * trying to display Playaround features to the user.
+	 * extension and set the current user. Once done, use <code>isCompatible()</code> to check for compatibility with the 
+	 * current OS before trying to display Playaround features to the user.
 	 */
 	public class Playaround {
 		
 		// CONSTANTS :
 		private static const EXTENSION_ID:String = "com.studiopixmix.Playaround";
 		
-		private static const IS_COMPATIBLE:String = "playaround_isCompatible";
-		private static const SET_USER:String = "playaround_setUser";
-		private static const GET_AVAILABLE_USERS:String = "playaround_getAvailableUsers";
-		private static const POST_ACQUAINTANCE_EVENT:String = "playaround_postAcquaintanceEvent";
-		private static const GET_ACQUAINTANCES:String = "playaround_getAcquaintance";
-		private static const IS_ACQUAINTANCE:String = "playaround_isAcquaintance";
-		private static const DID_ACCEPT_INSTALL:String = "playaround_didAcceptInstall";
-		private static const DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
+		// FUNCTIONS :
+		private static const FN_SET_USER:String = "playaround_setUser";
+		private static const FN_IS_COMPATIBLE:String = "playaround_isCompatible";
+		private static const FN_GET_AVAILABLE_USERS:String = "playaround_getAvailableUsers";
+		private static const FN_POST_ACQUAINTANCE_EVENT:String = "playaround_postAcquaintanceEvent";
+		private static const FN_GET_ACQUAINTANCES:String = "playaround_getAcquaintance";
+		private static const FN_IS_ACQUAINTANCE:String = "playaround_isAcquaintance";
+		private static const FN_DID_ACCEPT_INSTALL:String = "playaround_didAcceptInstall";
+		private static const FN_DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
 		
+		// STATUS EVENTS :
+		private static const EVENT_GET_AVAILABLE_USERS_SUCCESS:String = "GetAvailableUsers.Success";
+		private static const EVENT_GET_AVAILABLE_USERS_FAILURE:String = "GetAvailableUsers.Failure";
+		
+		private static const EVENT_POST_ACQUAINTANCE_EVENT_SUCCESS:String = "PostAcquaintanceEvent.Success";
+		private static const EVENT_POST_ACQUAINTANCE_EVENT_FAILURE:String = "PostAcquaintanceEvent.Failure";
+		
+		private static const EVENT_GET_ACQUAINTANCES_SUCCESS:String = "GetAcquaintances.Success";
+		private static const EVENT_GET_ACQUAINTANCES_FAILURE:String = "GetAcquaintances.Failure";
+		
+		private static const EVENT_IS_ACQUAINTANCE_SUCCESS:String = "IsAcquaintance.Success";
+		private static const EVENT_IS_ACQUAINTANCE_FAILURE:String = "IsAcquaintance.Failure";
 		
 		// PROPERTIES :
 		/** The logging function you want to use. Defaults to trace. */
@@ -47,22 +61,37 @@ package com.studiopixmix.playaround {
 		 * @param debug							Whether debug mode should be enabled
 		 */
 		public function init(secretKey:String, useDefaultInstallPromptDialog:Boolean, debug:Boolean = false):void {
-			// TODO
+			if(secretKey != null)
+				throw new Error("Playaround extension already initialized");
+			
+			Playaround.secretKey = secretKey;
+			Playaround.useDefaultInstallPromptDialog = useDefaultInstallPromptDialog;
+			Playaround.debug = debug;
+			
+			log("Playaround extension initialized (secretKey : " + secretKey + ", useDefaultInstallPromptDialog : " + useDefaultInstallPromptDialog  + ", debug : " + debug + ").");
+		}
+		
+		/**
+		 * Sets the current Playaround user. A Playaround user is needed for any operation (get users, acquaintances, etc.).
+		 */
+		public function setUser(userId:String, userNickname:String = null):void {
+			if(secretKey == null)
+				throw new Error("Playaround extension is not initialized");
+			
+			log("Setting Playaround user (id : " + userId + ", nickname : " + userNickname + ") ...");
+			context = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
+			if(context == null)
+				return;
+			
+			context.call(FN_SET_USER, secretKey, userId, userNickname, useDefaultInstallPromptDialog, debug);
+			log("Playaround user set succesfully.");
 		}
 		
 		/**
 		 * Returns true if the current platform is supported (iOS and Android API >= 14).
 		 */
 		public function isCompatible():Boolean {
-			// TODO
-		}
-		
-		
-		/**
-		 * Sets the current Playaround user. A Playaround user is needed for any operation (get users, acquaintances, etc.).
-		 */
-		public function setUser(userId:String, userNickname:String = null):void {
-			// TODO
+			return context != null && context.call(FN_IS_COMPATIBLE);
 		}
 		
 		/**
@@ -72,7 +101,33 @@ package com.studiopixmix.playaround {
 		 * @param onFailure	function(error:PlayaroundError):void
 		 */
 		public function getAvailableUsers(onSuccess:Function, onFailure:Function):void {
-			// TODO
+			if(context == null)
+				return;
+			
+			log("Getting available Playaround users ...");
+			context.addEventListener(StatusEvent.STATUS, onStatusEvent);
+			context.call(FN_GET_AVAILABLE_USERS);
+			
+			function onStatusEvent(ev:StatusEvent):void {
+				if(ev.code == EVENT_GET_AVAILABLE_USERS_SUCCESS) {
+					var result:Array = JSON.parse(ev.level) as Array;
+					var users:Vector.<PlayaroundUser> = new Vector.<PlayaroundUser>();
+					for(var i:int = 0 ; i < result.length ; i++) {
+						users.push(PlayaroundUser.fromObject(result[i]));
+					}
+					
+					log("Succesfully retrieved " + users.length + " users.");
+					onSuccess(users);
+				}
+				else if(ev.code == EVENT_GET_AVAILABLE_USERS_FAILURE) {
+					var error:PlayaroundError = PlayaroundError.fromObject(JSON.parse(ev.level));
+					log("Error while retrieving users : " + error);
+					onFailure(error);
+				}
+				else
+					return;
+				context.removeEventListener(StatusEvent.STATUS, onStatusEvent);
+			}
 		}
 		
 		/**
@@ -83,7 +138,27 @@ package com.studiopixmix.playaround {
 		 * @param onFailure	funciton(error:PlayaroundError):void
 		 */
 		public function postAcquaintanceEvent(friendId:String, onSuccess:Function, onFailure:Function):void {
-			// TODO
+			if(context == null)
+				return;
+			
+			log("Posting acqauintance event with " + friendId + " ...");
+			context.addEventListener(StatusEvent.STATUS, onStatusEvent);
+			context.call(FN_POST_ACQUAINTANCE_EVENT, friendId);
+			
+			function onStatusEvent(ev:StatusEvent):void {
+				if(ev.code == EVENT_POST_ACQUAINTANCE_EVENT_SUCCESS) {
+					log("Succesfully posted acquaintance.");
+					onSuccess();
+				}
+				else if(ev.code == EVENT_POST_ACQUAINTANCE_EVENT_FAILURE) {
+					var error:PlayaroundError = PlayaroundError.fromObject(JSON.parse(ev.level));
+					log("Error while posting acquaintance : " + error);
+					onFailure(error);
+				}
+				else
+					return;
+				context.removeEventListener(StatusEvent.STATUS, onStatusEvent);
+			}
 		}
 		
 		
@@ -94,7 +169,33 @@ package com.studiopixmix.playaround {
 		 * @param onFailure	function(error:PlayaroundError):void
 		 */
 		public function getAcquaintances(onSuccess:Function, onFailure:Function):void {
-			// TODO
+			if(context == null)
+				return;
+			
+			log("Getting acquaintances ...");
+			context.addEventListener(StatusEvent.STATUS, onStatusEvent);
+			context.call(FN_GET_ACQUAINTANCES);
+			
+			function onStatusEvent(ev:StatusEvent):void {
+				if(ev.code == EVENT_GET_ACQUAINTANCES_SUCCESS) {
+					var result:Array = JSON.parse(ev.level) as Array;
+					var users:Vector.<PlayaroundUser> = new Vector.<PlayaroundUser>();
+					for(var i:int = 0 ; i < result.length ; i++) {
+						users.push(PlayaroundUser.fromObject(result[i]));
+					}
+					
+					log("Succesfully retrieved " + users.length + " acquaintances.");
+					onSuccess(users);
+				}
+				else if(ev.code == EVENT_GET_ACQUAINTANCES_FAILURE) {
+					var error:PlayaroundError = PlayaroundError.fromObject(JSON.parse(ev.level));
+					log("Error while retrieving acquaintances : " + error);
+					onFailure(error);
+				}
+				else
+					return;
+				context.removeEventListener(StatusEvent.STATUS, onStatusEvent);
+			}
 		}
 		
 		/**
@@ -105,7 +206,28 @@ package com.studiopixmix.playaround {
 		 * @param onFailure	function(error:PlayaroundError):void
 		 */
 		public function isAcquaintance(friendId:String, onSuccess:Function, onFailure:Function):void {
-			// TODO
+			if(context == null)
+				return;
+			
+			log("Checking if " + friendId + " is an acquaintance ...");
+			context.addEventListener(StatusEvent.STATUS, onStatusEvent);
+			context.call(FN_IS_ACQUAINTANCE);
+			
+			function onStatusEvent(ev:StatusEvent):void {
+				if(ev.code == EVENT_IS_ACQUAINTANCE_SUCCESS) {
+					var result:Boolean = JSON.parse(ev.level) as Boolean;
+					log(friendId + " is acsquaintance ? " + result);
+					onSuccess(result);
+				}
+				else if(ev.code == EVENT_IS_ACQUAINTANCE_FAILURE) {
+					var error:PlayaroundError = PlayaroundError.fromObject(JSON.parse(ev.level));
+					log("Error while checking acquaintance with " + friendId + " : " + error);
+					onFailure(error);
+				}
+				else
+					return;
+				context.removeEventListener(StatusEvent.STATUS, onStatusEvent);
+			}
 		}
 		
 		/**
@@ -113,7 +235,11 @@ package com.studiopixmix.playaround {
 		 * <code>useDefaultInstallPromptDialog</code> to false).
 		 */
 		public function didAcceptInstall():void {
-			// TODO
+			if(context == null)
+				return;
+			
+			log("User did accept installing Playaroung app, informing Playaround SDK ...");
+			context.call(FN_DID_ACCEPT_INSTALL);
 		}
 		
 		/**
@@ -121,7 +247,11 @@ package com.studiopixmix.playaround {
 		 * <code>useDefaultInstallPromptDialog</code> to false). 
 		 */
 		public function didRefuseInstall():void {
-			// TODO
+			if(context == null)
+				return;
+			
+			log("User refused to install Playaroung app, informing Playaround SDK ...");
+			context.call(FN_DID_REFUSE_INSTALL);
 		}
 		
 		

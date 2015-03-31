@@ -24,5 +24,10 @@ package com.studiopixmix.playaround {
 			this.distance = distance;
 			this.photoURL = photoURL;
 		}
+		
+		
+		internal static function fromObject(object:Object):PlayaroundUser {
+			return new PlayaroundUser(object.id, object.name, object.nickname, object.age, object.distance, object.photoURL);
+		}
 	}
 }

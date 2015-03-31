@@ -16,5 +16,10 @@ package com.studiopixmix.playaround {
 			this.status = status;
 			this.message = message;
 		}
+		
+		
+		internal static function fromObject(object:Object):PlayaroundError {
+			return new PlayaroundError(object.status, object.message);
+		}
 	}
 }
