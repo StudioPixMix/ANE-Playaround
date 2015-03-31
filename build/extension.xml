@@ -1,0 +1,30 @@
+<extension xmlns="http://ns.adobe.com/air/extension/16.0">
+	<id>com.studiopixmix.Playaround</id>
+	<versionNumber>1.0.0</versionNumber>
+	<platforms>
+		<platform name="iPhone-ARM">
+			<applicationDeployment>
+				<nativeLibrary>libPlayaroundIosExtension.a</nativeLibrary>
+				<initializer>PlayaroundExtensionInitializer</initializer>
+				<finalizer>PlayaroundExtensionFinalizer</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="Android-ARM">
+			<applicationDeployment>
+				<nativeLibrary>Playaround.jar</nativeLibrary>
+				<initializer>com.studiopixmix.playaround.PlayaroundExtension</initializer>
+				<finalizer>com.studiopixmix.playaround.PlayaroundExtension</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="Android-x86">
+			<applicationDeployment>
+				<nativeLibrary>Playaround.jar</nativeLibrary>
+				<initializer>com.studiopixmix.playaround.PlayaroundExtension</initializer>
+				<finalizer>com.studiopixmix.playaround.PlayaroundExtension</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="default">
+			<applicationDeployment/>
+		</platform>
+	</platforms>
+</extension>

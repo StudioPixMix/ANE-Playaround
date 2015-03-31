@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<platform xmlns="http://ns.adobe.com/air/extension/16.0">
+    
+	<!--
+	<packagedDependencies>
+		<packagedDependency></packagedDependency>
+    </packagedDependencies> 
+	-->
+	
+	<!--
+    <packagedResources>
+        <packagedResource> 
+            <packageName></packageName> 
+            <folderName></folderName> 
+        </packagedResource>
+    </packagedResources>
+	-->
+</platform>

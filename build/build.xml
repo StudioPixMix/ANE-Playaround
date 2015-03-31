@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Air Native Extension Build Scripts" default="all">
+
+	<!-- Config -->
+	<property file="build.config" />
+
+	<!-- All -->
+	<target name="all" depends="ios,android,swc,package,doc" description="Full build of extension" />
+
+	<!-- iOS -->
+	<target name="ios" description="Build iOS Library">
+		<mkdir dir="../temp/ios/build/" />
+
+		<exec executable="xcodebuild" failonerror="true" dir="../ios/${name}IosExtension">
+			<arg line='-project ${name}IosExtension.xcodeproj' />
+			<arg line='-target ${name}IosExtension' />
+			<arg line='-configuration Release' />
+			<arg line='SYMROOT=../../temp/ios/build/' />
+		</exec>
+
+		<copy file="../temp/ios/build/Release-iphoneos/lib${name}IosExtension.a" todir="../bin/ios" overwrite="true" />
+		<copy todir="../bin/ios">
+            <fileset dir="../ios/MoPubIosExtension/AdColony/SDK" />
+			<fileset dir="../ios/MoPubIosExtension/VidCoin/SDK" />
+            <fileset dir="../ios/MoPubIosExtension/Mobvious/SDK">
+                <include name="sas.bundle" />
+            </fileset>
+		</copy>
+
+		<exec executable="ibtool" failonerror="true">
+			<arg value="--errors" />
+			<arg value="--warnings" />
+			<arg value="--notices" />
+			<arg line="--output-format human-readable-text" />
+			<arg line="--sdk ${ios.sdk}" />
+			<arg line="--compile ../bin/ios/MPAdBrowserController.nib" />
+			<arg value="${mopub.ios.sdk}/MoPubSDK/Internal/Common/MPAdBrowserController.xib" />
+		</exec>
+
+		<copy todir="../bin/ios" flatten="true">
+			<fileset dir="${mopub.ios.sdk}/MoPubSDK" casesensitive="yes" id="classfiles">
+				<include name="**/*.png" />
+				<include name="**/*.nib" />
+				<include name="**/*.js" />
+			</fileset>
+		</copy>
+
+		<delete dir="../temp" />
+	</target>
+	
+	<!-- Android -->
+	<target name="android" description="Build android Library">
+		<echo message="Build android library ..."/>
+		
+		<property name="android.jar" value="${android.sdk}/platforms/android-20/android.jar"/>
+		
+		<delete>
+			<fileset dir="../bin/android" excludes="library.swf"/>
+		</delete>
+		<delete>
+			<dirset dir="../bin/android"/>
+		</delete>
+		
+		<mkdir dir="../bin/android/temp/classes" />
+
+		<javac destdir="../bin/android/temp/classes" includeantruntime="false" target="1.6" source="1.6" fork="yes" executable="${javac.dir}/javac${bin.ext}">
+			<src path="../android/src" />
+			<classpath>
+				<pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
+				<pathelement location="${android.jar}" />
+				<!--<pathelement location="../android/libs/.jar"/>-->
+			</classpath>
+		</javac>
+		<jar basedir="../bin/android/temp/classes" destfile="../bin/android/${name}.jar"/>
+		<delete dir="../bin/android/temp"/>
+		
+		<!-- Copy all JAR dependencies -->
+		<copy todir="../bin/android">
+			<fileset dir="../android/libs" />
+		</copy>
+		
+		<!-- Copy resources -->
+		<!--
+		<copy todir="../bin/android/">
+			<fileset dir=""/>
+		</copy>
+		-->
+		
+		<echo message="Done."/>
+	</target>
+	
+	<!-- ActionScript -->
+	<target name="swc" description="Build SWC library">
+		<echo message="Building SWC library ..."/>
+
+        <fileset dir="../actionscript/src" casesensitive="yes" id="classfiles">
+            <include name="**/*.as"/>
+        </fileset>
+
+        <pathconvert property="classlist" refid="classfiles" pathsep=" " dirsep=".">
+            <regexpmapper from=".*src.(.*)\.as" to="\1"/>
+        </pathconvert>
+
+        <exec executable="${flex.sdk}/bin/compc${bat.ext}" failonerror="true">
+            <env key="AIR_SDK_HOME" value="${flex.sdk}"/>
+            <arg line='-source-path ../actionscript/src'/>
+            <arg line='-output ../bin/actionscript/${name}.swc'/>
+            <arg line='-swf-version=${swf.version}'/>
+            <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-include-classes ${classlist}'/>
+        </exec>
+
+		<echo message="Propagating SWF ..."/>
+        <unzip src="../bin/actionscript/${name}.swc" dest="../bin/actionscript/content" overwrite="true"/>
+
+        <copy file="../bin/actionscript/content/library.swf" todir="../bin/ios" overwrite="true"/>
+        <copy file="../bin/actionscript/content/library.swf" todir="../bin/android" overwrite="true"/>
+        <copy file="../bin/actionscript/content/library.swf" todir="../bin/default" overwrite="true"/>
+		
+		<delete dir="../bin/actionscript/content"/>
+		
+		<echo message="Done."/>
+    </target>
+
+	<!-- Packaging -->
+	<target name="package" description="Create the extension package">
+		<echo message="Packaging the ANE ..."/>
+		<exec executable="${flex.sdk}/bin/adt${bat.ext}" failonerror="true" dir="../bin">
+            <arg value="-package"/>
+            <arg value="-target"/>
+            <arg value="ane"/>
+            <arg value="${name}.ane"/>
+            <arg value="../build/extension.xml"/>
+            <arg line="-swc actionscript/default/${name}.swc"/>
+            <arg line="-platform iPhone-ARM -platformoptions ../build/platform-ios.xml -C ios/ ."/>
+            <arg line="-platform Android-ARM -platformoptions ../build/platform-android.xml -C android/ ."/>
+			<arg line="-platform Android-x86 -platformoptions ../build/platform-android.xml -C android/ ."/>
+            <arg line="-platform default -C default/ ."/>
+        </exec>
+		<copy file="../bin/actionscript/default/${name}.swc" todir="../bin" overwrite="true"/>
+		<echo message="Done."/>
+	</target>
+	
+	<!-- Export -->
+	<target name="export" description="Export the compiled ANE">
+		<echo message="Exporting the compiled ANE to ${export.dir} ..."/>
+		<copy file="../bin/${name}.ane" todir="${export.dir}" overwrite="true"/>
+		<echo message="Done."/>
+	</target>
+	
+	<!-- ASDoc -->
+	<target name="doc" description="Generate ASDoc">
+		<echo message="Generating asdoc ..."/>
+		<mkdir dir="../doc"/>
+		<exec executable="${flex.sdk}/bin/asdoc${bat.ext}" failonerror="true">
+            <arg line='-load-config="${flex.sdk}/frameworks/airmobile-config.xml"'/>
+			<arg line="-main-title '${name} ANE API Documentation'" />
+            <arg line="-window-title '${name} ANE API Documentation'" />
+            <arg line="-source-path ../actionscript/src" />
+			<arg line="-doc-sources ../actionscript/src" />
+			<arg line="-output ../doc" />
+        </exec>
+		<echo message="Done."/>
+	</target>
+	
+</project>
