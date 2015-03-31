@@ -24,6 +24,8 @@ package com.studiopixmix.playaround {
 		private static const FN_DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
 		
 		// STATUS EVENTS :
+		private static const EVENT_LOG:String = "Log";
+		
 		private static const EVENT_GET_AVAILABLE_USERS_SUCCESS:String = "GetAvailableUsers.Success";
 		private static const EVENT_GET_AVAILABLE_USERS_FAILURE:String = "GetAvailableUsers.Failure";
 		
@@ -78,11 +80,19 @@ package com.studiopixmix.playaround {
 			if(secretKey == null)
 				throw new Error("Playaround extension is not initialized");
 			
-			log("Setting Playaround user (id : " + userId + ", nickname : " + userNickname + ") ...");
+			if(context != null) {
+				log("Disconnecting previous Playaround user ...");
+				context.removeEventListener(StatusEvent.STATUS, onNativeLog);
+				context.dispose();
+				context = null;
+			}
+			
 			context = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
 			if(context == null)
 				return;
+			context.addEventListener(StatusEvent.STATUS, onNativeLog);
 			
+			log("Setting Playaround user (id : " + userId + ", nickname : " + userNickname + ") ...");
 			context.call(FN_SET_USER, secretKey, userId, userNickname, useDefaultInstallPromptDialog, debug);
 			log("Playaround user set succesfully.");
 		}
@@ -260,6 +270,12 @@ package com.studiopixmix.playaround {
 		/////////////
 		// LOGGING //
 		/////////////
+		
+		private static function onNativeLog(ev:StatusEvent):void {
+			if(ev.code != EVENT_LOG)
+				return;
+			log(ev.level);
+		}
 		
 		/**
 		 * Outputs the given message(s) using the provided logger function, or using trace.
