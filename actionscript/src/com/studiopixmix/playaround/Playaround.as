@@ -8,8 +8,8 @@ package com.studiopixmix.playaround {
 	
 	/**
 	 * The Playaround extension. Before trying to do anything (even checking for compatibility), you must initialize the 
-	 * extension and set the current user. Once done, use <code>isCompatible()</code> to check for compatibility with the 
-	 * current OS before trying to display Playaround features to the user.
+	 * extension. Once done, use <code>isCompatible()</code> to check for compatibility with the current OS before trying 
+	 * to use Playaround features.
 	 */
 	public class Playaround {
 		
@@ -69,7 +69,8 @@ package com.studiopixmix.playaround {
 		////////////////
 		
 		/**
-		 * Initializes Playaround extension with the given secret key. Call this only once in your app, before setting the current user.
+		 * Initializes Playaround extension with the given secret key. Call this only once in your app, before setting the current user or checking for 
+		 * extension compatibility.
 		 * 
 		 * @param secretKey						Your Playaround secret key
 		 * @param useDefaultInstallPromptDialog	Whether you will provide your own install prompt. If true, you will need to manually call 
@@ -84,7 +85,22 @@ package com.studiopixmix.playaround {
 			Playaround.useDefaultInstallPromptDialog = useDefaultInstallPromptDialog;
 			Playaround.debug = debug;
 			
+			context = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
+			if(context == null)
+				return;
+			context.addEventListener(StatusEvent.STATUS, onNativeLog);
+			context.addEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
+			
 			log("Playaround extension initialized (secretKey : " + secretKey + ", useDefaultInstallPromptDialog : " + useDefaultInstallPromptDialog  + ", debug : " + debug + ").");
+		}
+		
+		/**
+		 * Returns true if the current platform is supported (iOS and Android API >= 14).
+		 */
+		public function isCompatible():Boolean {
+			if(context == null)
+				throw new Error("Playaround is not initialized.");
+			return context.call(FN_IS_COMPATIBLE);
 		}
 		
 		/**
@@ -94,32 +110,10 @@ package com.studiopixmix.playaround {
 			if(secretKey == null)
 				throw new Error("Playaround extension is not initialized");
 			
-			if(context != null) {
-				log("Disconnecting previous Playaround user ...");
-				context.removeEventListener(StatusEvent.STATUS, onNativeLog);
-				context.removeEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
-				context.dispose();
-				context = null;
-			}
-			
-			context = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
-			if(context == null)
-				return;
-			context.addEventListener(StatusEvent.STATUS, onNativeLog);
-			context.addEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
-			
 			log("Setting Playaround user (id : " + userId + ", nickname : " + userNickname + ") ...");
 			context.call(FN_SET_USER, secretKey, userId, userNickname, useDefaultInstallPromptDialog, debug);
 			log("Playaround user set succesfully.");
 		}
-		
-		/**
-		 * Returns true if the current platform is supported (iOS and Android API >= 14).
-		 */
-		public function isCompatible():Boolean {
-			return context != null && context.call(FN_IS_COMPATIBLE);
-		}
-		
 		/**
 		 * Get the list of single users near the current user.
 		 * 
