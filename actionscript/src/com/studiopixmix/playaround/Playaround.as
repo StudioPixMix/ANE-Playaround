@@ -259,7 +259,7 @@ package com.studiopixmix.playaround {
 			if(ev.code != EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT)
 				return;
 			log("Playaround SDK requires to display a custom install prompt.");
-			dispatchEvent(new Event(SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT));
+			eventDispatcher.dispatchEvent(new Event(SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT));
 		}
 		
 		/**
