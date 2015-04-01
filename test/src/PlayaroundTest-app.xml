@@ -15,7 +15,7 @@
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>PlayaroundTest</id>
+	<id>com.voodoo.quizrun</id>
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>PlayaroundTest</filename>
@@ -289,9 +289,7 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
-	
-
-<extensions>
+	<extensions>
         <extensionID>com.studiopixmix.Playaround</extensionID>
     </extensions>
 </application>

@@ -235,7 +235,7 @@ package com.studiopixmix.playaround {
 			
 			function onStatusEvent(ev:StatusEvent):void {
 				if(ev.code == EVENT_IS_ACQUAINTANCE_SUCCESS) {
-					var result:Boolean = new Boolean(ev.level);
+					var result:Boolean = ev.level == "true";
 					log(friendId + " is acsquaintance ? " + result);
 					onSuccess(result);
 				}

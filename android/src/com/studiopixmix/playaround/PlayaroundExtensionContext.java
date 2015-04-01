@@ -136,7 +136,7 @@ public class PlayaroundExtensionContext extends FREContext {
 		playaround.isUserAcquaintance(friendId, new IsUserAcquaintanceListener() {
 			@Override public void onSuccess(boolean isAcquaintance) {
 				FRELog.i(friendId + " is acquaintance ? " + isAcquaintance);
-				context.dispatchStatusEventAsync(PlayaroundEvent.EVENT_IS_ACQUAINTANCE_FAILURE, isAcquaintance ? "true" : "false");
+				context.dispatchStatusEventAsync(PlayaroundEvent.EVENT_IS_ACQUAINTANCE_SUCCESS, isAcquaintance ? "true" : "false");
 			}
 			
 			@Override public void onError(PlayAroundError error) {

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <platform xmlns="http://ns.adobe.com/air/extension/16.0">
+
     <packagedDependencies>
 		<packagedDependency>PlayAroundSdk-v0.1.0.jar</packagedDependency>
     </packagedDependencies>
+	
+	 <packagedResources>
+        <packagedResource> 
+            <packageName>com.studiopixmix.playaround</packageName> 
+            <folderName>playaround-res</folderName> 
+        </packagedResource>
+    </packagedResources>
+	
 </platform>

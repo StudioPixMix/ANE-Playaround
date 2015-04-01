@@ -20,6 +20,9 @@ package {
 		
 		// PROPERTIES :
 		private var dy:Number;
+		private var availableUsers:Vector.<PlayaroundUser>;
+		private var acquaintances:Vector.<PlayaroundUser>;
+		
 		
 		// CONSTRUCTOR
 		public function PlayaroundTest() {
@@ -97,10 +100,8 @@ package {
 		private function getAvailableUsers():void {
 			Playaround.getAvailableUsers(
 				function(users:Vector.<PlayaroundUser>):void {
-					trace(users.length + " available users : ");
-					for each(var u:PlayaroundUser in users) {
-						trace("\t-> " + u);
-					}
+					trace(users.length + " available users :\n\t->" + users.join("\n\t-> "));
+					availableUsers = users;
 				},
 				function(error:PlayaroundError):void {
 					trace("### Error : " + error);
@@ -109,7 +110,12 @@ package {
 		}
 		
 		private function postAcquaintanceEvent():void {
-			Playaround.postAcquaintanceEvent("MyFriendId1", 
+			if(availableUsers == null || availableUsers.length == 0) {
+				trace("No available users.");
+				return;
+			}
+			
+			Playaround.postAcquaintanceEvent(availableUsers[0].id, 
 				function():void {
 					trace("Acquaintance posted.");
 				}, 
@@ -122,10 +128,8 @@ package {
 		private function getAcquaintances():void {
 			Playaround.getAcquaintances(
 				function(users:Vector.<PlayaroundUser>):void {
-					trace(users.length + " acquaintances : ");
-					for each(var u:PlayaroundUser in users) {
-						trace("\t-> " + u);
-					}
+					trace(users.length + " acquaintances :\n\t->" + users.join("\n\t-> "));
+					acquaintances = users;
 				},
 				function(error:PlayaroundError):void {
 					trace("### Error : " + error);
@@ -134,17 +138,28 @@ package {
 		}
 		
 		private function isAcquaintance():void {
-			var id:String = "MyFriendId1" + (Math.random() > .5 ? "_fake" :"");
-			Playaround.isAcquaintance(id,
+			var users:Vector.<PlayaroundUser> = new Vector.<PlayaroundUser>();
+			if(acquaintances != null && acquaintances.length > 0)
+				users = users.concat(acquaintances);
+			if(availableUsers != null && availableUsers.length > 0)
+				users = users.concat(availableUsers);
+			
+			if(users.length == 0) {
+				trace("No users.");
+				return;
+			}
+			
+			var user:PlayaroundUser = users[Math.round(Math.random() * (users.length - 1))];
+			
+			Playaround.isAcquaintance(user.id,
 				function(isAcquaintance:Boolean):void {
-					trace(id + " is acquaintance ? " + isAcquaintance);
+					trace(user.id + " is acquaintance ? " + isAcquaintance);
 				},
 				function(error:PlayaroundError):void {
 					trace("### Error : " + error);
 				}
 			);
 		}
-		
 		
 		private function displayInstallPrompt(ev:Event):void {
 			trace("Install prompt should be displayed, use Accept/Refuse install buttons.");
