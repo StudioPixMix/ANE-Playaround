@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <platform xmlns="http://ns.adobe.com/air/extension/16.0">
 
-	<!--
+
 	<linkerOptions>
-		<option></option>
+		<option>-framework PlayAround-iOS-SDK-v0.1.0</option>
 	</linkerOptions>
-	-->
+
 	
-	<!--
     <packagedDependencies>
-        <packagedDependency></packagedDependency>
+        <packagedDependency>PlayAround-iOS-SDK-v0.1.0.framework</packagedDependency>
     </packagedDependencies>
 	-->
 

@@ -20,30 +20,10 @@
 
 		<copy file="../temp/ios/build/Release-iphoneos/lib${name}IosExtension.a" todir="../bin/ios" overwrite="true" />
 		<copy todir="../bin/ios">
-            <fileset dir="../ios/MoPubIosExtension/AdColony/SDK" />
-			<fileset dir="../ios/MoPubIosExtension/VidCoin/SDK" />
-            <fileset dir="../ios/MoPubIosExtension/Mobvious/SDK">
-                <include name="sas.bundle" />
-            </fileset>
+            <fileset dir="../ios/PlayaroundIosExtension/PlayaroundIosExtension/SDK" />
 		</copy>
 
-		<exec executable="ibtool" failonerror="true">
-			<arg value="--errors" />
-			<arg value="--warnings" />
-			<arg value="--notices" />
-			<arg line="--output-format human-readable-text" />
-			<arg line="--sdk ${ios.sdk}" />
-			<arg line="--compile ../bin/ios/MPAdBrowserController.nib" />
-			<arg value="${mopub.ios.sdk}/MoPubSDK/Internal/Common/MPAdBrowserController.xib" />
-		</exec>
-
-		<copy todir="../bin/ios" flatten="true">
-			<fileset dir="${mopub.ios.sdk}/MoPubSDK" casesensitive="yes" id="classfiles">
-				<include name="**/*.png" />
-				<include name="**/*.nib" />
-				<include name="**/*.js" />
-			</fileset>
-		</copy>
+		<delete dir="../bin/ios/PlayAround-iOS-SDK-v0.1.0.framework/Versions"/>
 
 		<delete dir="../temp" />
 	</target>
