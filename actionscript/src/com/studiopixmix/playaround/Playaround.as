@@ -5,12 +5,20 @@ package com.studiopixmix.playaround {
 	import flash.external.ExtensionContext;
 	import flash.system.Capabilities;
 	
+	
 	/**
 	 * The Playaround extension. Before trying to do anything (even checking for compatibility), you must initialize the 
 	 * extension and set the current user. Once done, use <code>isCompatible()</code> to check for compatibility with the 
 	 * current OS before trying to display Playaround features to the user.
 	 */
-	public class Playaround extends EventDispatcher {
+	public class Playaround {
+		
+		// EVENTS
+		/** Event dispatched by the extension when <code>useDefaultInstallPromptDialog</code> is set to false, and the Playaround SDK
+		 * requires displaying a custom install prompt dialog. The dialog must complete either by calling <code>didAcceptInstall()</code> or 
+		 * <code>didRefuseInstall()</code>. */
+		public static const SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT:String = "Playaround.ShouldDisplayCustomInstallPrompt";
+		
 		
 		// CONSTANTS :
 		private static const EXTENSION_ID:String = "com.studiopixmix.Playaround";
@@ -24,12 +32,7 @@ package com.studiopixmix.playaround {
 		private static const FN_IS_ACQUAINTANCE:String = "playaround_isAcquaintance";
 		private static const FN_DID_ACCEPT_INSTALL:String = "playaround_didAcceptInstall";
 		private static const FN_DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
-		
-		/** Event dispatched by the extension when <code>useDefaultInstallPromptDialog</code> is set to false, and the Playaround SDK
-		 * requires displaying a custom install prompt dialog. The dialog must complete either by calling <code>didAcceptInstall()</code> or 
-		 * <code>didRefuseInstall()</code>. */
-		public static const SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT:String = "Playaround.ShouldDisplayCustomInstallPrompt";
-		
+
 		// STATUS EVENTS :
 		private static const EVENT_LOG:String = "Log";
 		
@@ -52,6 +55,8 @@ package com.studiopixmix.playaround {
 		public static var logger:Function = trace;
 		/** The prefix appended to every log message. Defaults to "[Playaround]". */
 		public static var logPrefix:String = "[Playaround]";
+		
+		private static var eventDispatcher:EventDispatcher = new EventDispatcher();
 		
 		private static var context:ExtensionContext;
 		private static var secretKey:String;
@@ -309,5 +314,14 @@ package com.studiopixmix.playaround {
 			
 			logger((logPrefix && logPrefix.length > 0 ? logPrefix + " " : "") + message + " " + additionnalMessages.join(" "));
 		}
+		
+		
+		//////////////////////
+		// EVENT DISPATCHER //
+		//////////////////////
+		
+		public static function addEventListener(type:String, listener:Function):void { eventDispatcher.addEventListener(type, listener); }
+		public static function hasEventListener(type:String):Boolean { return eventDispatcher.hasEventListener(type); }
+		public static function removeEventListener(type:String, listener:Function):void { eventDispatcher.removeEventListener(type, listener); }
 	}
 }
