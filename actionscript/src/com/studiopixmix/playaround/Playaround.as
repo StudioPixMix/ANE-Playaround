@@ -1,4 +1,6 @@
 package com.studiopixmix.playaround {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.external.ExtensionContext;
 	import flash.system.Capabilities;
@@ -8,7 +10,7 @@ package com.studiopixmix.playaround {
 	 * extension and set the current user. Once done, use <code>isCompatible()</code> to check for compatibility with the 
 	 * current OS before trying to display Playaround features to the user.
 	 */
-	public class Playaround {
+	public class Playaround extends EventDispatcher {
 		
 		// CONSTANTS :
 		private static const EXTENSION_ID:String = "com.studiopixmix.Playaround";
@@ -23,8 +25,15 @@ package com.studiopixmix.playaround {
 		private static const FN_DID_ACCEPT_INSTALL:String = "playaround_didAcceptInstall";
 		private static const FN_DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
 		
+		/** Event dispatched by the extension when <code>useDefaultInstallPromptDialog</code> is set to false, and the Playaround SDK
+		 * requires displaying a custom install prompt dialog. The dialog must complete either by calling <code>didAcceptInstall()</code> or 
+		 * <code>didRefuseInstall()</code>. */
+		public static const SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT:String = "Playaround.ShouldDisplayCustomInstallPrompt";
+		
 		// STATUS EVENTS :
 		private static const EVENT_LOG:String = "Log";
+		
+		private static const EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT:String = "SetUser.ShouldDisplayCustomInstallPrompt";
 		
 		private static const EVENT_GET_AVAILABLE_USERS_SUCCESS:String = "GetAvailableUsers.Success";
 		private static const EVENT_GET_AVAILABLE_USERS_FAILURE:String = "GetAvailableUsers.Failure";
@@ -83,6 +92,7 @@ package com.studiopixmix.playaround {
 			if(context != null) {
 				log("Disconnecting previous Playaround user ...");
 				context.removeEventListener(StatusEvent.STATUS, onNativeLog);
+				context.removeEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
 				context.dispose();
 				context = null;
 			}
@@ -91,6 +101,7 @@ package com.studiopixmix.playaround {
 			if(context == null)
 				return;
 			context.addEventListener(StatusEvent.STATUS, onNativeLog);
+			context.addEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
 			
 			log("Setting Playaround user (id : " + userId + ", nickname : " + userNickname + ") ...");
 			context.call(FN_SET_USER, secretKey, userId, userNickname, useDefaultInstallPromptDialog, debug);
@@ -240,6 +251,18 @@ package com.studiopixmix.playaround {
 			}
 		}
 		
+		
+		///////////////////////////
+		// CUSTOM INSTALL PROMPT //
+		///////////////////////////
+		
+		private function onShouldDisplayInstallPrompt(ev:StatusEvent):void {
+			if(ev.code != EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT)
+				return;
+			log("Playaround SDK requires to display a custom install prompt.");
+			dispatchEvent(new Event(SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT));
+		}
+		
 		/**
 		 * Call this when the user accepted to install the Playaround app (only needed if you initialized the extension with 
 		 * <code>useDefaultInstallPromptDialog</code> to false).
@@ -263,8 +286,6 @@ package com.studiopixmix.playaround {
 			log("User refused to install Playaroung app, informing Playaround SDK ...");
 			context.call(FN_DID_REFUSE_INSTALL);
 		}
-		
-		
 		
 		
 		/////////////
