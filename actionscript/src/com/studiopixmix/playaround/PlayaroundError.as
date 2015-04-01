@@ -21,5 +21,9 @@ package com.studiopixmix.playaround {
 		internal static function fromObject(object:Object):PlayaroundError {
 			return new PlayaroundError(object.status, object.message);
 		}
+		
+		public function toString():String {
+			return "<PlayaroundError[" + status + (message != null ? "|" + message : "") + "]>";
+		}
 	}
 }

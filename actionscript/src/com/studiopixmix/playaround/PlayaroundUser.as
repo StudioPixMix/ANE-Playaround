@@ -29,5 +29,9 @@ package com.studiopixmix.playaround {
 		internal static function fromObject(object:Object):PlayaroundUser {
 			return new PlayaroundUser(object.id, object.name, object.nickname, object.age, object.distance, object.photoURL);
 		}
+		
+		public function toString():String {
+			return "<PlayaroundUser[" + id + ", name:" + name + ", nickname:" + nickname + ", age:" + age + ", distance:" + distance + ", photoURL:" + photoURL + "]>";
+		}
 	}
 }
