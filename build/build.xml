@@ -48,7 +48,7 @@
 			<classpath>
 				<pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
 				<pathelement location="${android.jar}" />
-				<!--<pathelement location="../android/libs/.jar"/>-->
+				<pathelement location="../android/libs/PlayAroundSdk-v0.1.0.jar"/>
 			</classpath>
 		</javac>
 		<jar basedir="../bin/android/temp/classes" destfile="../bin/android/${name}.jar"/>
@@ -111,13 +111,13 @@
             <arg value="ane"/>
             <arg value="${name}.ane"/>
             <arg value="../build/extension.xml"/>
-            <arg line="-swc actionscript/default/${name}.swc"/>
-            <arg line="-platform iPhone-ARM -platformoptions ../build/platform-ios.xml -C ios/ ."/>
+            <arg line="-swc actionscript/${name}.swc"/>
+            <!--<arg line="-platform iPhone-ARM -platformoptions ../build/platform-ios.xml -C ios/ ."/>-->
             <arg line="-platform Android-ARM -platformoptions ../build/platform-android.xml -C android/ ."/>
 			<arg line="-platform Android-x86 -platformoptions ../build/platform-android.xml -C android/ ."/>
             <arg line="-platform default -C default/ ."/>
         </exec>
-		<copy file="../bin/actionscript/default/${name}.swc" todir="../bin" overwrite="true"/>
+		<copy file="../bin/actionscript/${name}.swc" todir="../bin" overwrite="true"/>
 		<echo message="Done."/>
 	</target>
 	

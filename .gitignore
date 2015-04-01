@@ -4,5 +4,4 @@
 *.prefs
 *.classpath
 actionscript/bin
-*.xcuserstate
-*.xcuserdatad
+test/bin-debug

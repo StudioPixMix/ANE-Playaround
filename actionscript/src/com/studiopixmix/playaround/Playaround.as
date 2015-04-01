@@ -77,8 +77,8 @@ package com.studiopixmix.playaround {
 		 * 										<code>didAcceptInstall()</code> and <code>didRefuseInstall()</code>
 		 * @param debug							Whether debug mode should be enabled
 		 */
-		public function init(secretKey:String, useDefaultInstallPromptDialog:Boolean, debug:Boolean = false):void {
-			if(secretKey != null)
+		public static function init(secretKey:String, useDefaultInstallPromptDialog:Boolean, debug:Boolean = false):void {
+			if(Playaround.secretKey != null)
 				throw new Error("Playaround extension already initialized");
 			
 			Playaround.secretKey = secretKey;
@@ -97,7 +97,7 @@ package com.studiopixmix.playaround {
 		/**
 		 * Returns true if the current platform is supported (iOS and Android API >= 14).
 		 */
-		public function isCompatible():Boolean {
+		public static function isCompatible():Boolean {
 			if(context == null)
 				throw new Error("Playaround is not initialized.");
 			return context.call(FN_IS_COMPATIBLE);
@@ -106,7 +106,7 @@ package com.studiopixmix.playaround {
 		/**
 		 * Sets the current Playaround user. A Playaround user is needed for any operation (get users, acquaintances, etc.).
 		 */
-		public function setUser(userId:String, userNickname:String = null):void {
+		public static function setUser(userId:String, userNickname:String = null):void {
 			if(secretKey == null)
 				throw new Error("Playaround extension is not initialized");
 			
@@ -120,7 +120,7 @@ package com.studiopixmix.playaround {
 		 * @param onSuccess	function(users:Vector.&lt;PlayaroundUser&gt;):void
 		 * @param onFailure	function(error:PlayaroundError):void
 		 */
-		public function getAvailableUsers(onSuccess:Function, onFailure:Function):void {
+		public static function getAvailableUsers(onSuccess:Function, onFailure:Function):void {
 			if(context == null)
 				return;
 			
@@ -157,7 +157,7 @@ package com.studiopixmix.playaround {
 		 * @param onSuccess	function():void
 		 * @param onFailure	funciton(error:PlayaroundError):void
 		 */
-		public function postAcquaintanceEvent(friendId:String, onSuccess:Function, onFailure:Function):void {
+		public static function postAcquaintanceEvent(friendId:String, onSuccess:Function, onFailure:Function):void {
 			if(context == null)
 				return;
 			
@@ -188,7 +188,7 @@ package com.studiopixmix.playaround {
 		 * @param onSuccess	function(acquaintances:Vector.&lt;PlayaroundUser&gt;):void
 		 * @param onFailure	function(error:PlayaroundError):void
 		 */
-		public function getAcquaintances(onSuccess:Function, onFailure:Function):void {
+		public static function getAcquaintances(onSuccess:Function, onFailure:Function):void {
 			if(context == null)
 				return;
 			
@@ -225,17 +225,17 @@ package com.studiopixmix.playaround {
 		 * @param onSuccess	function(isAcquaintance:Boolean):void
 		 * @param onFailure	function(error:PlayaroundError):void
 		 */
-		public function isAcquaintance(friendId:String, onSuccess:Function, onFailure:Function):void {
+		public static function isAcquaintance(friendId:String, onSuccess:Function, onFailure:Function):void {
 			if(context == null)
 				return;
 			
 			log("Checking if " + friendId + " is an acquaintance ...");
 			context.addEventListener(StatusEvent.STATUS, onStatusEvent);
-			context.call(FN_IS_ACQUAINTANCE);
+			context.call(FN_IS_ACQUAINTANCE, friendId);
 			
 			function onStatusEvent(ev:StatusEvent):void {
 				if(ev.code == EVENT_IS_ACQUAINTANCE_SUCCESS) {
-					var result:Boolean = JSON.parse(ev.level) as Boolean;
+					var result:Boolean = new Boolean(ev.level);
 					log(friendId + " is acsquaintance ? " + result);
 					onSuccess(result);
 				}
@@ -255,18 +255,18 @@ package com.studiopixmix.playaround {
 		// CUSTOM INSTALL PROMPT //
 		///////////////////////////
 		
-		private function onShouldDisplayInstallPrompt(ev:StatusEvent):void {
+		private static function onShouldDisplayInstallPrompt(ev:StatusEvent):void {
 			if(ev.code != EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT)
 				return;
 			log("Playaround SDK requires to display a custom install prompt.");
-			dispatchEvent(new Event(SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT));
+			eventDispatcher.dispatchEvent(new Event(SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT));
 		}
 		
 		/**
 		 * Call this when the user accepted to install the Playaround app (only needed if you initialized the extension with 
 		 * <code>useDefaultInstallPromptDialog</code> to false).
 		 */
-		public function didAcceptInstall():void {
+		public static function didAcceptInstall():void {
 			if(context == null)
 				return;
 			
@@ -278,7 +278,7 @@ package com.studiopixmix.playaround {
 		 * Call this when the user refused to install the Playaround app (only needed if you initialized the extension with 
 		 * <code>useDefaultInstallPromptDialog</code> to false). 
 		 */
-		public function didRefuseInstall():void {
+		public static function didRefuseInstall():void {
 			if(context == null)
 				return;
 			
