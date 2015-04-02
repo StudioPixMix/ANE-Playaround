@@ -11,8 +11,7 @@
         return nil;
     
     self.context = context;
-    
-    [NSNotificationCenter]
+
     return self;
 }
 

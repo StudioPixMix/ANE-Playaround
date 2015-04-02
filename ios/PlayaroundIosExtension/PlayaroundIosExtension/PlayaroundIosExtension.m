@@ -49,6 +49,9 @@ DEFINE_ANE_FUNCTION(playaround_setUser) {
     
     [PlayAround setDebug:(debug == 1)];
     
+    // Without delegate = default prompt dialog
+    // With delegate = custom prompt dialog
+    
     if (useDefaultInstallPromptDialog == 1)
         [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname];
     else {
@@ -174,6 +177,22 @@ DEFINE_ANE_FUNCTION(playaround_didRefuseInstall) {
     return NULL;
 }
 
+DEFINE_ANE_FUNCTION(playaround_handleOpenUrl) {
+    DISPATCH_LOG_EVENT(context, @"Handle open URL");
+    
+    NSString* urlAsString;
+    NSString* sourceApplication;
+    
+    [playaroundConversionHelper FREGetObject:argv[0] asString:&urlAsString];
+    [playaroundConversionHelper FREGetObject:argv[1] asString:&sourceApplication];
+
+    NSURL* url = [NSURL URLWithString:urlAsString];
+    
+    [PlayAround handleOpenURL:url sourceApplication:sourceApplication];
+    
+    return NULL;
+}
+
 // ANE INITIALIZER/FINALIZER
 
 void PlayaroundIosExtensionContextInitializer( void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToSet, const FRENamedFunction** functionsToSet )
@@ -188,6 +207,7 @@ void PlayaroundIosExtensionContextInitializer( void* extData, const uint8_t* ctx
         MAP_FUNCTION(playaround_isAcquaintance, NULL),
         MAP_FUNCTION(playaround_didAcceptInstall, NULL),
         MAP_FUNCTION(playaround_didRefuseInstall, NULL),
+        MAP_FUNCTION(playaround_handleOpenUrl, NULL),
     };
     
     *numFunctionsToSet = sizeof( mopubFunctionMap ) / sizeof( FRENamedFunction );
