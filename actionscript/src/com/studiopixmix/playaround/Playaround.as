@@ -1,6 +1,8 @@
 package com.studiopixmix.playaround {
+	import flash.desktop.NativeApplication;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.InvokeEvent;
 	import flash.events.StatusEvent;
 	import flash.external.ExtensionContext;
 	import flash.system.Capabilities;
@@ -32,6 +34,7 @@ package com.studiopixmix.playaround {
 		private static const FN_IS_ACQUAINTANCE:String = "playaround_isAcquaintance";
 		private static const FN_DID_ACCEPT_INSTALL:String = "playaround_didAcceptInstall";
 		private static const FN_DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
+		private static const FN_HANDLE_OPEN_URL:String = "playaround_handleOpenUrl"; // iOS only
 
 		// STATUS EVENTS :
 		private static const EVENT_LOG:String = "Log";
@@ -91,7 +94,30 @@ package com.studiopixmix.playaround {
 			context.addEventListener(StatusEvent.STATUS, onNativeLog);
 			context.addEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
 			
+			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
+			
 			log("Playaround extension initialized (secretKey : " + secretKey + ", useDefaultInstallPromptDialog : " + useDefaultInstallPromptDialog  + ", debug : " + debug + ").");
+		}
+		
+		/**
+		 * On iOS, we need to implement the App Delegate's "openURL" method.
+		 * We use the "invoke" event as a workaround since we don't have an iOS app.
+		 */
+		private static function onInvokeEvent(event:InvokeEvent):void {
+			if (Capabilities.manufacturer.indexOf("iOS") == -1)
+				return;
+			
+			if (event.arguments == null || event.arguments.length < 2)
+				return;
+
+			// See http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/InvokeEvent.html#arguments
+			var url:String = event.arguments[0];
+			var sourceAppId:String = event.arguments[1];
+			
+			if (url == null || sourceAppId == null)
+				return;
+			
+			context.call(FN_HANDLE_OPEN_URL, event.arguments[0], event.arguments[1]);
 		}
 		
 		/**
