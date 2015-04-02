@@ -13,6 +13,8 @@
 #define EVENT_IS_ACQUAINTANCE_SUCCESS               (uint8_t*)[@"IsAcquaintance.Success" UTF8String]
 #define EVENT_IS_ACQUAINTANCE_FAILURE               (uint8_t*)[@"IsAcquaintance.Failure" UTF8String]
 
+#define EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT  (uint8_t*)[@"SetUser.ShouldDisplayCustomInstallPrompt" UTF8String]
+
 #define EVENT_LOG                                   (uint8_t*)[@"Log" UTF8String]
 
 #define DISPATCH_ANE_EVENT(context, event, data) FREDispatchStatusEventAsync(context, event, data)

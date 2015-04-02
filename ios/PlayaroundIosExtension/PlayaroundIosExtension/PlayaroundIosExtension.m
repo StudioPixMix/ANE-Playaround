@@ -1,6 +1,6 @@
 #import "PlayaroundDelegate.h"
 #import "FlashRuntimeExtensions.h"
-#import <PlayAround-iOS-SDK-v0.1.0/PlayAround.h>
+#import <PlayAround/PlayAround.h>
 #import "TypeConversionHelper.h"
 #import "ExtensionDefs.h"
 #import "PlayaroundJsonObject.h"
@@ -48,12 +48,18 @@ DEFINE_ANE_FUNCTION(playaround_setUser) {
     DISPATCH_LOG_EVENT(context, logMessage);
     
     [PlayAround setDebug:(debug == 1)];
-    [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname delegate:playaroundDelegate];
+    
+    if (useDefaultInstallPromptDialog == 1)
+        [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname];
+    else {
+        playaroundDelegate = [[PlayaroundDelegate alloc] initWithContext:context];
+        [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname delegate:playaroundDelegate];
+    }
     
     return NULL;
 }
 
-DEFINE_ANE_FUNCTION(playround_isCompatible) {
+DEFINE_ANE_FUNCTION(playaround_isCompatible) {
     FREObject isCompatible;
     
     [playaroundConversionHelper FREGetBool:[PlayAround isCompatible] asObject:&isCompatible];
@@ -175,15 +181,13 @@ void PlayaroundIosExtensionContextInitializer( void* extData, const uint8_t* ctx
     static FRENamedFunction mopubFunctionMap[] =
     {
         MAP_FUNCTION(playaround_setUser, NULL),
-        MAP_FUNCTION(playround_isCompatible, NULL),
+        MAP_FUNCTION(playaround_isCompatible, NULL),
         MAP_FUNCTION(playaround_getAvailableUsers, NULL),
         MAP_FUNCTION(playaround_postAcquaintanceEvent, NULL),
         MAP_FUNCTION(playaround_getAcquaintance, NULL),
         MAP_FUNCTION(playaround_isAcquaintance, NULL),
-        MAP_FUNCTION(playaround_setUser, NULL),
-        MAP_FUNCTION(playaround_setUser, NULL),
-        MAP_FUNCTION(playaround_setUser, NULL),
-        MAP_FUNCTION(playaround_setUser, NULL),
+        MAP_FUNCTION(playaround_didAcceptInstall, NULL),
+        MAP_FUNCTION(playaround_didRefuseInstall, NULL),
     };
     
     *numFunctionsToSet = sizeof( mopubFunctionMap ) / sizeof( FRENamedFunction );

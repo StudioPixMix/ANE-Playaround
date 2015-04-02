@@ -1,5 +1,5 @@
 #import "PlayaroundJsonObject.h"
-#import <PlayAround-iOS-SDK-v0.1.0/PlayAround.h>
+#import <PlayAround/PlayAround.h>
 
 #define playaroundErrorToString(enum) [@[@"value1",@"value2",@"value3"] objectAtIndex:enum]
 

@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <PlayAround-iOS-SDK-v0.1.0/PlayAround.h>
+#import <PlayAround/PlayAround.h>
 
 @interface PlayaroundJsonObject : NSObject
 

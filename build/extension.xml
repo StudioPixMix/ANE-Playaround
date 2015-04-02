@@ -5,8 +5,8 @@
 		<platform name="iPhone-ARM">
 			<applicationDeployment>
 				<nativeLibrary>libPlayaroundIosExtension.a</nativeLibrary>
-				<initializer>PlayaroundExtensionInitializer</initializer>
-				<finalizer>PlayaroundExtensionFinalizer</finalizer>
+				<initializer>PlayaroundIosExtensionInitializer</initializer>
+				<finalizer>PlayaroundIosExtensionFinalizer</finalizer>
 			</applicationDeployment>
 		</platform>
 		<platform name="Android-ARM">

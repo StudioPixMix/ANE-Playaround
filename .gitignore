@@ -5,3 +5,5 @@
 *.classpath
 actionscript/bin
 test/bin-debug
+*.xcuserstate
+*.xcuserdatad
