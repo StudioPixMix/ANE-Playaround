@@ -60,11 +60,9 @@
 		</copy>
 		
 		<!-- Copy resources -->
-		<!--
-		<copy todir="../bin/android/">
-			<fileset dir=""/>
+		<copy todir="../bin/android/playaround-res">
+			<fileset dir="../android/res"/>
 		</copy>
-		-->
 		
 		<echo message="Done."/>
 	</target>
