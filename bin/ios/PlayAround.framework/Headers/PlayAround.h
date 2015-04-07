@@ -49,6 +49,9 @@ typedef void (^PASEventBlock)(PASError *error);
 + (void)setDebug:(BOOL)debug;
 
 // Webservice
+/*!
+ * Return Available User List
+ */
 - (void)getAvailableUsers:(PASAvailableUsersBlock)completionBlock;
 - (void)getAcquaintances:(PASAcquaintancesBlock)completionBlock;
 - (void)postAcquaintanceEvent:(NSString*)userId completion:(PASEventBlock)completionBlock;

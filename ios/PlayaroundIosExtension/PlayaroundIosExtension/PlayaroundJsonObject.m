@@ -66,13 +66,22 @@
 }
 
 - (NSDictionary *) buildJSONDictionaryOfUser:(PASUser *)user {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-            user.userId,    @"id",
-            user.name,      @"name",
-            user.nickname,  @"nickname",
-            user.age,       @"age",
-            user.distance,  @"distance",
-            user.photo,     @"photoURL",
-            nil];
+    return @{
+             @"id" :        [self getEmptyStringIfNull:user.userId],
+             @"name" :      [self getEmptyStringIfNull:user.name],
+             @"nickname" :  [self getEmptyStringIfNull:user.nickname],
+             @"age" :       [NSNumber numberWithInteger:user.age],
+             @"distance" :  [self getEmptyStringIfNull:user.distance],
+             @"photoURL" :  [self getEmptyStringIfNull:user.photo]
+    };
 }
+
+- (NSString*) getEmptyStringIfNull:(NSString *)string {
+    if (string == nil)
+        return @"";
+    
+    return string;
+}
+
+
 @end

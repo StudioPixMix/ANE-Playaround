@@ -144,6 +144,7 @@ DEFINE_ANE_FUNCTION(playaround_isAcquaintance) {
     NSString* logMessage = [NSString stringWithFormat:@"Checking if user is acquainted with %@", userId];
     DISPATCH_LOG_EVENT(context, logMessage);
     
+
     [[PlayAround sharedInstance] isAcquaintedWith:userId completion:^(BOOL isAcquainted, PASError *error) {
         if (error != nil) {
             DISPATCH_LOG_EVENT(context, @"Could not check acquaintance.");
@@ -152,10 +153,13 @@ DEFINE_ANE_FUNCTION(playaround_isAcquaintance) {
             return;
         }
         
-        FREObject isAcquaintance;
-        [playaroundConversionHelper FREGetBool:isAcquainted asObject:&isAcquaintance];
+        NSString* logMessage = [NSString stringWithFormat:@"Acquaintance checked : %i", isAcquainted];
+        DISPATCH_LOG_EVENT(context, logMessage);
         
-        DISPATCH_ANE_EVENT(context, EVENT_IS_ACQUAINTANCE_SUCCESS, isAcquaintance);
+        // AS side excepts a string representation of the boolean
+        NSString* isAcquaintedString = (isAcquainted ? @"true" : @"false");
+        
+        DISPATCH_ANE_EVENT(context, EVENT_IS_ACQUAINTANCE_SUCCESS, (uint8_t*)isAcquaintedString.UTF8String);
     }];
 
     return NULL;
@@ -187,9 +191,8 @@ DEFINE_ANE_FUNCTION(playaround_handleOpenUrl) {
     [playaroundConversionHelper FREGetObject:argv[1] asString:&sourceApplication];
 
     NSURL* url = [NSURL URLWithString:urlAsString];
-    
     [PlayAround handleOpenURL:url sourceApplication:sourceApplication];
-    
+
     return NULL;
 }
 
