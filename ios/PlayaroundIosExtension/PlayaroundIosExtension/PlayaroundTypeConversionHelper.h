@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "FlashRuntimeExtensions.h"
 
-@interface TypeConversionHelper : NSObject
+@interface PlayaroundTypeConversionHelper : NSObject
 
 - (FREResult) FREGetObject:(FREObject)object asInt:(int32_t*)value;
 - (FREResult) FREGetObject:(FREObject)object asBoolean:(uint32_t*)value;

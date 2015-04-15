@@ -1,6 +1,6 @@
-#import "TypeConversionHelper.h"
+#import "PlayaroundTypeConversionHelper.h"
 
-@implementation TypeConversionHelper
+@implementation PlayaroundTypeConversionHelper
 
 - (FREResult) FREGetObject:(FREObject)object asInt:(int32_t*)value
 {

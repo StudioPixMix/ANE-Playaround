@@ -1,7 +1,7 @@
 #import "PlayaroundDelegate.h"
 #import "FlashRuntimeExtensions.h"
 #import <PlayAround/PlayAround.h>
-#import "TypeConversionHelper.h"
+#import "PlayaroundTypeConversionHelper.h"
 #import "ExtensionDefs.h"
 #import "PlayaroundJsonObject.h"
 
@@ -10,7 +10,7 @@
 #define MAP_FUNCTION(fn, data) { (const uint8_t*)(#fn), (data), &(fn) }
 
 PlayaroundDelegate* playaroundDelegate;
-TypeConversionHelper* playaroundConversionHelper;
+PlayaroundTypeConversionHelper* playaroundConversionHelper;
 
 /**
  * Small helper to dispatch a Playaround error with the given event.
@@ -109,7 +109,7 @@ DEFINE_ANE_FUNCTION(playaround_postAcquaintanceEvent) {
         
         DISPATCH_LOG_EVENT(context, @"Successfully posted acquaintance event.");
         
-        DISPATCH_ANE_EVENT(context, EVENT_POST_ACQUAINTANCE_EVENT_SUCCESS, nil);
+        DISPATCH_ANE_EVENT(context, EVENT_POST_ACQUAINTANCE_EVENT_SUCCESS, (uint8_t*)[@"" UTF8String]);
     }];
     
     return NULL;
@@ -229,7 +229,7 @@ void PlayaroundIosExtensionInitializer( void** extDataToSet, FREContextInitializ
     *ctxFinalizerToSet = &PlayaroundIosExtensionContextFinalizer;
     
     playaroundDelegate = [[PlayaroundDelegate alloc] init];
-    playaroundConversionHelper = [[TypeConversionHelper alloc] init];
+    playaroundConversionHelper = [[PlayaroundTypeConversionHelper alloc] init];
 }
 
 void PlayaroundIosExtensionFinalizer()
