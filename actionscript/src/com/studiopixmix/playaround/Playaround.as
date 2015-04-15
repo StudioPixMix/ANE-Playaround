@@ -65,6 +65,7 @@ package com.studiopixmix.playaround {
 		private static var secretKey:String;
 		private static var useDefaultInstallPromptDialog:Boolean;
 		private static var debug:Boolean;
+		private static var isInitialized:Boolean;
 		
 		
 		////////////////
@@ -87,6 +88,13 @@ package com.studiopixmix.playaround {
 			Playaround.secretKey = secretKey;
 			Playaround.useDefaultInstallPromptDialog = useDefaultInstallPromptDialog;
 			Playaround.debug = debug;
+			
+			isInitialized = true;
+			
+			if(!isSupported()) {
+				log("Unsupported platform. All calls will be ignored.");
+				return;
+			}
 			
 			context = ExtensionContext.createExtensionContext(EXTENSION_ID, "");
 			if(context == null)
@@ -121,11 +129,20 @@ package com.studiopixmix.playaround {
 		}
 		
 		/**
+		 * Returns true when the platform is supported (ie: iOS / Android).
+		 */
+		public static function isSupported():Boolean {
+			return Capabilities.manufacturer.indexOf("iOS") != -1 || Capabilities.manufacturer.indexOf("Android") != -1;
+		}
+		
+		/**
 		 * Returns true if the current platform is supported (iOS and Android API >= 14).
 		 */
 		public static function isCompatible():Boolean {
+			if(!isInitialized)
+				throw new Error("Playaround is not initialized!");
 			if(context == null)
-				throw new Error("Playaround is not initialized.");
+				return false;
 			return context.call(FN_IS_COMPATIBLE);
 		}
 		
@@ -133,6 +150,9 @@ package com.studiopixmix.playaround {
 		 * Sets the current Playaround user. A Playaround user is needed for any operation (get users, acquaintances, etc.).
 		 */
 		public static function setUser(userId:String, userNickname:String = null):void {
+			if(context == null)
+				return;
+			
 			if(secretKey == null)
 				throw new Error("Playaround extension is not initialized");
 			
