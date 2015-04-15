@@ -14,7 +14,7 @@ package com.studiopixmix.playaround {
 		public var photoURL:String;
 		
 		// CONSTRUCTOR
-		public function PlayaroundUser(id:String, name:String, nickname:String, age:int, distance:String, photoURL:String) {
+		public function PlayaroundUser(id:String = null, name:String = null, nickname:String = null, age:int = -1, distance:String = null, photoURL:String = null) {
 			super();
 			
 			this.id = id;
