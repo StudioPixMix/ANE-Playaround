@@ -2,7 +2,7 @@
 <platform xmlns="http://ns.adobe.com/air/extension/16.0">
 
     <packagedDependencies>
-		<packagedDependency>PlayAroundSdk-v0.1.0.jar</packagedDependency>
+		<packagedDependency>PlayAroundSdk-v0.1.3.jar</packagedDependency>
     </packagedDependencies>
 	
 	 <packagedResources>
