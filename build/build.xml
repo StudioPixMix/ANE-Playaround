@@ -17,6 +17,13 @@
 			<arg line='-configuration Release' />
 			<arg line='SYMROOT=../../temp/ios/build/' />
 		</exec>
+		
+		<delete>
+			<fileset dir="../bin/ios" excludes="library.swf"/>
+		</delete>
+		<delete>
+			<dirset dir="../bin/ios"/>
+		</delete>
 
 		<copy file="../temp/ios/build/Release-iphoneos/lib${name}IosExtension.a" todir="../bin/ios" overwrite="true" />
 		<copy todir="../bin/ios">
