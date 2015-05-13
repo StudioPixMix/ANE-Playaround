@@ -2,8 +2,8 @@
 //  PASError.h
 //  PlayAroundSDK
 //
-//  Created by Benjamin Combes on 07/03/15.
-//  Copyright (c) 2015 Benjamin Combes. All rights reserved.
+//  Created by Marc Bounthong on 07/03/15.
+//  Copyright (c) 2015 Marc Bounthong. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

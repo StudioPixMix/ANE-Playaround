@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0175EF811ACC270500663604 /* PlayAround.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0175EF801ACC270500663604 /* PlayAround.framework */; };
 		019A0C731ACA861F00F60A26 /* PlayaroundIosExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C721ACA861F00F60A26 /* PlayaroundIosExtension.m */; };
 		019A0C8E1ACA8D0C00F60A26 /* PlayaroundDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C8D1ACA8D0C00F60A26 /* PlayaroundDelegate.m */; };
 		019A0C911ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C901ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.m */; };
 		019A0C951ACAC90B00F60A26 /* PlayaroundJsonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C941ACAC90B00F60A26 /* PlayaroundJsonObject.m */; };
+		D64CD16E1B03A65500D8DD16 /* PlayAround.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D64CD16D1B03A65500D8DD16 /* PlayAround.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,7 +27,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0175EF801ACC270500663604 /* PlayAround.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PlayAround.framework; path = PlayaroundIosExtension/SDK/PlayAround.framework; sourceTree = "<group>"; };
 		019A0C6D1ACA861F00F60A26 /* libPlayaroundIosExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPlayaroundIosExtension.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		019A0C721ACA861F00F60A26 /* PlayaroundIosExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayaroundIosExtension.m; sourceTree = "<group>"; };
 		019A0C8B1ACA8C7D00F60A26 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
@@ -38,6 +37,7 @@
 		019A0C921ACAC2C300F60A26 /* ExtensionDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionDefs.h; sourceTree = "<group>"; };
 		019A0C931ACAC90B00F60A26 /* PlayaroundJsonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayaroundJsonObject.h; sourceTree = "<group>"; };
 		019A0C941ACAC90B00F60A26 /* PlayaroundJsonObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayaroundJsonObject.m; sourceTree = "<group>"; };
+		D64CD16D1B03A65500D8DD16 /* PlayAround.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PlayAround.framework; path = PlayaroundIosExtension/SDK/PlayAround.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0175EF811ACC270500663604 /* PlayAround.framework in Frameworks */,
+				D64CD16E1B03A65500D8DD16 /* PlayAround.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +88,7 @@
 		019A0C881ACA8BCC00F60A26 /* SDK */ = {
 			isa = PBXGroup;
 			children = (
-				0175EF801ACC270500663604 /* PlayAround.framework */,
+				D64CD16D1B03A65500D8DD16 /* PlayAround.framework */,
 			);
 			name = SDK;
 			sourceTree = "<group>";
@@ -239,6 +239,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PlayaroundIosExtension/SDK",
+					"$(PROJECT_DIR)",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -254,6 +255,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PlayaroundIosExtension/SDK",
+					"$(PROJECT_DIR)",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_LDFLAGS = "-ObjC";
