@@ -17,6 +17,13 @@
 			<arg line='-configuration Release' />
 			<arg line='SYMROOT=../../temp/ios/build/' />
 		</exec>
+		
+		<delete>
+			<fileset dir="../bin/ios" excludes="library.swf"/>
+		</delete>
+		<delete>
+			<dirset dir="../bin/ios"/>
+		</delete>
 
 		<copy file="../temp/ios/build/Release-iphoneos/lib${name}IosExtension.a" todir="../bin/ios" overwrite="true" />
 		<copy todir="../bin/ios">
@@ -48,7 +55,7 @@
 			<classpath>
 				<pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
 				<pathelement location="${android.jar}" />
-				<pathelement location="../android/libs/PlayAroundSdk-v0.1.6.jar"/>
+				<pathelement location="../android/libs/PlayAroundSdk-v0.1.8.jar"/>
 			</classpath>
 		</javac>
 		<jar basedir="../bin/android/temp/classes" destfile="../bin/android/${name}.jar"/>
