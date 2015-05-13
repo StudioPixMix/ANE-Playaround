@@ -48,7 +48,7 @@
 			<classpath>
 				<pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
 				<pathelement location="${android.jar}" />
-				<pathelement location="../android/libs/PlayAroundSdk-v0.1.6.jar"/>
+				<pathelement location="../android/libs/PlayAroundSdk-v0.1.8.jar"/>
 			</classpath>
 		</javac>
 		<jar basedir="../bin/android/temp/classes" destfile="../bin/android/${name}.jar"/>
