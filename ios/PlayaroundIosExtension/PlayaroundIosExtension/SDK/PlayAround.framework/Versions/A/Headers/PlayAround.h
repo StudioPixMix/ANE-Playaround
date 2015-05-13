@@ -1,9 +1,10 @@
 //
 //  PlayAround.h
 //  PlayAroundSDK
+//  0.1.5
 //
-//  Created by Marc Bounthong on 07/03/15.
-//  Copyright (c) 2015 Marc Bounthong. All rights reserved.
+//  Created by Benjamin Combes on 07/03/15.
+//  Copyright (c) 2015 Benjamin Combes. All rights reserved.
 //
 
 #import "PASUser.h"
