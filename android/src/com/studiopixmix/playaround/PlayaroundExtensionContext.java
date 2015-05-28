@@ -11,6 +11,7 @@ import com.adobe.fre.FREFunction;
 import com.pft.playaroundsdk.GetAcquaintancesListener;
 import com.pft.playaroundsdk.GetAvailableUsersListener;
 import com.pft.playaroundsdk.IsUserAcquaintanceListener;
+import com.pft.playaroundsdk.OpenUserProfileListener;
 import com.pft.playaroundsdk.PlayAround;
 import com.pft.playaroundsdk.PlayAroundError;
 import com.pft.playaroundsdk.PlayAroundUser;
@@ -21,6 +22,7 @@ import com.studiopixmix.playaround.functions.GetAcquaintancesFunction;
 import com.studiopixmix.playaround.functions.GetAvailableUsersFunction;
 import com.studiopixmix.playaround.functions.IsAcquaintanceFunction;
 import com.studiopixmix.playaround.functions.IsCompatibleFunction;
+import com.studiopixmix.playaround.functions.OpenUserProfileFunction;
 import com.studiopixmix.playaround.functions.PostAcquaintanceEventFunction;
 import com.studiopixmix.playaround.functions.SetUserFunction;
 import com.studiopixmix.playaround.utils.FRELog;
@@ -157,6 +159,23 @@ public class PlayaroundExtensionContext extends FREContext {
 		});
 	}
 	
+	/**
+	 * Opens the user profile of the given friend.
+	 */
+	public static void openUserProfile(final FREContext context, final String friendId) {
+		FRELog.i("Openning user " + friendId + "'s profile ...");
+		playaround.openUserProfile(friendId, new OpenUserProfileListener() {
+			@Override public void onSuccess() {
+				FRELog.i(friendId + "'s profile opened.");
+				context.dispatchStatusEventAsync(PlayaroundEvent.EVENT_OPEN_USER_PROFILE_SUCCESS, "");
+			}
+			@Override public void onError(PlayAroundError error) {
+				FRELog.i("Playaround SDK failed to open profile of friend with ID " + friendId);
+				context.dispatchStatusEventAsync(PlayaroundEvent.EVENT_POST_ACQUAINTANCE_EVENT_FAILURE, new PlayaroundError(error).toJSON().toString());
+			}
+		});
+	}
+	
 	public static void didAcceptInstall() {
 		FRELog.i("Informing Playaround SDK the install prompt dialog is complete and the user accepted.");
 		installPromptListener.didAcceptInstall();
@@ -183,6 +202,7 @@ public class PlayaroundExtensionContext extends FREContext {
 		functions.put("playaround_postAcquaintanceEvent", new PostAcquaintanceEventFunction());
 		functions.put("playaround_getAcquaintance", new GetAcquaintancesFunction());
 		functions.put("playaround_isAcquaintance", new IsAcquaintanceFunction());
+		functions.put("playaround_openUserProfile", new OpenUserProfileFunction());
 		functions.put("playaround_didAcceptInstall", new DidAcceptInstallFunction());
 		functions.put("playaround_didRefuseInstall", new DidRefuseInstallFunction());
 

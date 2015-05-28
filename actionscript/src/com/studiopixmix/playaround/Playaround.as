@@ -37,6 +37,7 @@ package com.studiopixmix.playaround {
 		private static const FN_POST_ACQUAINTANCE_EVENT:String = "playaround_postAcquaintanceEvent";
 		private static const FN_GET_ACQUAINTANCES:String = "playaround_getAcquaintance";
 		private static const FN_IS_ACQUAINTANCE:String = "playaround_isAcquaintance";
+		private static const FN_OPEN_USER_PROFILE:String = "playaround_openUserProfile";
 		private static const FN_DID_ACCEPT_INSTALL:String = "playaround_didAcceptInstall";
 		private static const FN_DID_REFUSE_INSTALL:String = "playaround_didRefuseInstall";
 		private static const FN_HANDLE_OPEN_URL:String = "playaround_handleOpenUrl"; // iOS only
@@ -57,6 +58,9 @@ package com.studiopixmix.playaround {
 		
 		private static const EVENT_IS_ACQUAINTANCE_SUCCESS:String = "IsAcquaintance.Success";
 		private static const EVENT_IS_ACQUAINTANCE_FAILURE:String = "IsAcquaintance.Failure";
+		
+		private static const EVENT_OPEN_USER_PROFILE_SUCCESS:String = "OpenUserProfile.Success";
+		private static const EVENT_OPEN_USER_PROFILE_FAILURE:String = "OpenUserProfile.Failure";
 		
 		private static const EVENT_NEED_ACQUAINTANCES_REFRESH:String = "NeedAcquaintancesRefresh";
 		private static const EVENT_NEED_AVAILABLE_USERS_REFRESH:String = "NeedAvailableUsersRefresh";
@@ -277,6 +281,37 @@ package com.studiopixmix.playaround {
 				else if(ev.code == EVENT_IS_ACQUAINTANCE_FAILURE) {
 					var error:PlayaroundError = PlayaroundError.fromObject(JSON.parse(ev.level));
 					log("Error while checking acquaintance with " + friendId + " : " + error);
+					onFailure(error);
+				}
+				else
+					return;
+				context.removeEventListener(StatusEvent.STATUS, onStatusEvent);
+			}
+		}
+		
+		/**
+		 * Opens the user profile of the given friend.
+		 * 
+		 * @param friendId	The id of the friend to open profile of
+		 * @param onSuccess	function():void
+		 * @param onFailure	function(error:PlayaroundError):void
+		 */
+		public static function openUserProfile(friendId:String, onSuccess:Function, onFailure:Function):void {
+			if(context == null)
+				return;
+			
+			log("Opening profile of " + friendId + " ...");
+			context.addEventListener(StatusEvent.STATUS, onStatusEvent);
+			context.call(FN_OPEN_USER_PROFILE, friendId);
+			
+			function onStatusEvent(ev:StatusEvent):void {
+				if(ev.code == EVENT_OPEN_USER_PROFILE_SUCCESS) {
+					log(friendId + " profile opened.");
+					onSuccess();
+				}
+				else if(ev.code == EVENT_OPEN_USER_PROFILE_FAILURE) {
+					var error:PlayaroundError = PlayaroundError.fromObject(JSON.parse(ev.level));
+					log("Error while opening profile of friend with ID " + friendId + " : " + error);
 					onFailure(error);
 				}
 				else
