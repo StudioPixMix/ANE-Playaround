@@ -30,6 +30,8 @@ public class PlayaroundExtensionContext extends FREContext {
 	// PROPERTIES :
 	/** The PlayAround SDK instance. */
 	public static PlayAround playaround;
+	/** The PlayaroundEvents listener. */
+	private static PlayaroundEventsListener eventsListener;
 	/** The custom install prompt listener. */
 	private static PlayaroundInstallPromptListener installPromptListener;
 	
@@ -45,6 +47,11 @@ public class PlayaroundExtensionContext extends FREContext {
 		
 		if(playaround != null) {
 			FRELog.i("Disconnecting previous playaround user ...");
+			if(eventsListener != null) {
+				playaround.unregisterForPlayAroundEvents();
+				eventsListener.dispose();
+				eventsListener = null;
+			}
 			if(installPromptListener != null) {
 				playaround.unregisterForInstallPrompt();
 				installPromptListener.dispose();
@@ -58,6 +65,10 @@ public class PlayaroundExtensionContext extends FREContext {
 		playaround = new PlayAround(context.getActivity(), secretKey, userId);
 		playaround.setUserNickname(userNickname);
 		playaround.setDebug(debug);
+		
+		FRELog.i("Registering Playaround SDK events listener ...");
+		eventsListener = new PlayaroundEventsListener(context);
+		playaround.registerForPlayAroundEvents(eventsListener);
 		
 		if(!useDefaultInstallPromptDialog) {
 			FRELog.i("Registering a custom install prompt handler ...");
@@ -183,6 +194,11 @@ public class PlayaroundExtensionContext extends FREContext {
 
 	@Override
 	public void dispose() {
+		if(eventsListener != null) {
+			playaround.unregisterForPlayAroundEvents();
+			eventsListener.dispose();
+			eventsListener = null;
+		}
 		if(installPromptListener != null) {
 			playaround.unregisterForInstallPrompt();
 			installPromptListener.dispose();

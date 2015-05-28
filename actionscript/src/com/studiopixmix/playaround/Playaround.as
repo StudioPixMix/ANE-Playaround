@@ -21,6 +21,11 @@ package com.studiopixmix.playaround {
 		 * <code>didRefuseInstall()</code>. */
 		public static const SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT:String = "Playaround.ShouldDisplayCustomInstallPrompt";
 		
+		/** Event dispatched by the Playaround SDK when it requires you to refresh aacquaintances. */
+		public static const NEED_ACQUAINTANCES_REFRESH:String = "Playaround.NeedAcquaintancesRefresh";
+		
+		/** Event dispatched by the Playaround SDK when it requires you to refresh the list of available users. */
+		public static const NEED_AVAILABLE_USERS_REFRESH:String = "Playaround.NeedAvailableUsersRefresh";
 		
 		// CONSTANTS :
 		private static const EXTENSION_ID:String = "com.studiopixmix.Playaround";
@@ -52,6 +57,9 @@ package com.studiopixmix.playaround {
 		
 		private static const EVENT_IS_ACQUAINTANCE_SUCCESS:String = "IsAcquaintance.Success";
 		private static const EVENT_IS_ACQUAINTANCE_FAILURE:String = "IsAcquaintance.Failure";
+		
+		private static const EVENT_NEED_ACQUAINTANCES_REFRESH:String = "NeedAcquaintancesRefresh";
+		private static const EVENT_NEED_AVAILABLE_USERS_REFRESH:String = "NeedAvailableUsersRefresh";
 		
 		// PROPERTIES :
 		/** The logging function you want to use. Defaults to trace. */
@@ -100,32 +108,13 @@ package com.studiopixmix.playaround {
 			if(context == null)
 				return;
 			context.addEventListener(StatusEvent.STATUS, onNativeLog);
+			context.addEventListener(StatusEvent.STATUS, onNeedAcquaintancesRefresh);
+			context.addEventListener(StatusEvent.STATUS, onNeedAvailableUsersRefresh);
 			context.addEventListener(StatusEvent.STATUS, onShouldDisplayInstallPrompt);
 			
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 			
 			log("Playaround extension initialized (secretKey : " + secretKey + ", useDefaultInstallPromptDialog : " + useDefaultInstallPromptDialog  + ", debug : " + debug + ").");
-		}
-		
-		/**
-		 * On iOS, we need to implement the App Delegate's "openURL" method.
-		 * We use the "invoke" event as a workaround since we don't have an iOS app.
-		 */
-		private static function onInvokeEvent(event:InvokeEvent):void {
-			if (Capabilities.manufacturer.indexOf("iOS") == -1)
-				return;
-			
-			if (event.arguments == null || event.arguments.length < 2)
-				return;
-
-			// See http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/InvokeEvent.html#arguments
-			var url:String = event.arguments[0];
-			var sourceAppId:String = event.arguments[1];
-			
-			if (url == null || sourceAppId == null)
-				return;
-			
-			context.call(FN_HANDLE_OPEN_URL, event.arguments[0], event.arguments[1]);
 		}
 		
 		/**
@@ -294,6 +283,46 @@ package com.studiopixmix.playaround {
 					return;
 				context.removeEventListener(StatusEvent.STATUS, onStatusEvent);
 			}
+		}
+		
+		
+		////////////
+		// EVENTS //
+		////////////
+		
+		private static function onNeedAcquaintancesRefresh(ev:StatusEvent):void {
+			if(ev.code != EVENT_NEED_ACQUAINTANCES_REFRESH)
+				return;
+			log("Playaround SDK requires to refresh acquaintances.");
+			eventDispatcher.dispatchEvent(new Event(NEED_ACQUAINTANCES_REFRESH));
+		}
+		
+		private static function onNeedAvailableUsersRefresh(ev:StatusEvent):void {
+			if(ev.code != EVENT_NEED_AVAILABLE_USERS_REFRESH)
+				return;
+			log("Playaround SDK requires to refresh available users.");
+			eventDispatcher.dispatchEvent(new Event(NEED_AVAILABLE_USERS_REFRESH));
+		}
+		
+		/**
+		 * On iOS, we need to implement the App Delegate's "openURL" method.
+		 * We use the "invoke" event as a workaround since we don't have an iOS app.
+		 */
+		private static function onInvokeEvent(event:InvokeEvent):void {
+			if (Capabilities.manufacturer.indexOf("iOS") == -1)
+				return;
+			
+			if (event.arguments == null || event.arguments.length < 2)
+				return;
+			
+			// See http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/InvokeEvent.html#arguments
+			var url:String = event.arguments[0];
+			var sourceAppId:String = event.arguments[1];
+			
+			if (url == null || sourceAppId == null)
+				return;
+			
+			context.call(FN_HANDLE_OPEN_URL, event.arguments[0], event.arguments[1]);
 		}
 		
 		

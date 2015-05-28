@@ -21,4 +21,7 @@ public class PlayaroundEvent {
 	public static final String EVENT_IS_ACQUAINTANCE_SUCCESS = "IsAcquaintance.Success";
 	public static final String EVENT_IS_ACQUAINTANCE_FAILURE = "IsAcquaintance.Failure";
 	
+	public static final String EVENT_NEED_ACQUAINTANCES_REFRESH = "NeedAcquaintancesRefresh";
+	public static final String EVENT_NEED_AVAILABLE_USERS_REFRESH = "NeedAvailableUsersRefresh";
+	
 }
