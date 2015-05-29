@@ -15,9 +15,11 @@
 
 #define EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT  (uint8_t*)[@"SetUser.ShouldDisplayCustomInstallPrompt" UTF8String]
 
-
 #define EVENT_NEED_ACQUAINTANCES_REFRESH            (uint8_t*)[@"NeedAcquaintancesRefresh" UTF8String]
 #define EVENT_NEED_AVAILABLE_USERS_REFRESH          (uint8_t*)[@"NeedAvailableUsers" UTF8String]
+
+#define EVENT_OPEN_USER_PROFILE_SUCCESS             (uint8_t*)[@"OpenUserProfile.Success" UTF8String]
+#define EVENT_OPEN_USER_PROFILE_FAILURE             (uint8_t*)[@"OpenUserProfile.Failure" UTF8String]
 
 #define EVENT_LOG                                   (uint8_t*)[@"Log" UTF8String]
 

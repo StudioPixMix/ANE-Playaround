@@ -196,6 +196,20 @@ DEFINE_ANE_FUNCTION(playaround_handleOpenUrl) {
     return NULL;
 }
 
+DEFINE_ANE_FUNCTION(playaround_openUserProfile) {
+    DISPATCH_LOG_EVENT(context, @"Open user profile");
+    
+    NSString* friendId;
+    
+    [playaroundConversionHelper FREGetObject:argv[0] asString:&friendId];
+    
+    [[PlayAround sharedInstance] openProfileOfUserWithId:friendId];
+    
+    DISPATCH_ANE_EVENT(context, EVENT_OPEN_USER_PROFILE_SUCCESS, nil);
+    
+    return NULL;
+}
+
 // ANE INITIALIZER/FINALIZER
 
 void PlayaroundIosExtensionContextInitializer( void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToSet, const FRENamedFunction** functionsToSet )
@@ -211,6 +225,7 @@ void PlayaroundIosExtensionContextInitializer( void* extData, const uint8_t* ctx
         MAP_FUNCTION(playaround_didAcceptInstall, NULL),
         MAP_FUNCTION(playaround_didRefuseInstall, NULL),
         MAP_FUNCTION(playaround_handleOpenUrl, NULL),
+        MAP_FUNCTION(playaround_openUserProfile, NULL)
     };
     
     *numFunctionsToSet = sizeof( mopubFunctionMap ) / sizeof( FRENamedFunction );
