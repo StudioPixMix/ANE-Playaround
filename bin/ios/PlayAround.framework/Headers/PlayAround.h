@@ -1,7 +1,7 @@
 //
 //  PlayAround.h
 //  PlayAroundSDK
-//  0.1.5
+//  0.2.2
 //
 //  Created by Benjamin Combes on 07/03/15.
 //  Copyright (c) 2015 Benjamin Combes. All rights reserved.
@@ -10,25 +10,41 @@
 #import "PASUser.h"
 #import "PASError.h"
 
+
+typedef NS_ENUM(NSUInteger, PASGuestAction)
+{
+    PASGuestActionUndefined,
+    PASGuestActionGetMatchingUsers,
+    PASGuestActionWebView
+};
+
 typedef void (^PASAvailableUsersBlock)(NSArray *users, PASError *error);
+
 typedef void (^PASAcquaintancesBlock)(NSArray *users, NSArray *ids, PASError *error);
+
 typedef void (^PASIsUserAcquaintanceBlock)(BOOL isAcquainted, PASError *error);
+
 typedef void (^PASEventBlock)(PASError *error);
 
 
-@protocol PASInstallationMessageDelegate
+@protocol PASInstallationMessageDelegate<NSObject>
 @required
 - (void)didAcceptPlayAroundInstallation:(BOOL)accepted;
 @end
 
-@protocol PASDelegate
+@protocol PASDelegate<NSObject>
+@required
+- (void)needsAcquaintancesRefresh;
+
+- (void)needsAvailableUsersRefresh;
+
 @optional
-- (void)promptForInstallingPlayAroundApplication:(id<PASInstallationMessageDelegate>)installationMessageDelegate;
+- (void)promptForInstallingPlayAroundApplication:(id <PASInstallationMessageDelegate>)installationMessageDelegate;
 @end
 
-@interface PlayAround : NSObject<PASInstallationMessageDelegate>
+@interface PlayAround : NSObject <PASInstallationMessageDelegate>
 
-@property (nonatomic, assign) id<PASDelegate> delegate;
+@property(nonatomic, assign) id <PASDelegate> delegate;
 
 /**
 * Returns shared instance of PlayAround object. Must be initialized prior to use with any "sharedInstanceWith" method
@@ -43,24 +59,9 @@ typedef void (^PASEventBlock)(PASError *error);
 * Returns initialized shared instance of PlayAround object
 * @param secretKey  Secret key of your PlayAround developer account.
 * @param userId     The ID of the user currently playing your app.
-*/
-+ (PlayAround*)sharedInstanceWithSecretKey:(NSString*)secret userId:(NSString*)userId;
-
-/**
-* Returns initialized shared instance of PlayAround object
-* @param secretKey      Secret key of your PlayAround developer account.
-* @param userId         The ID of the user currently playing your app.
-* @param userNickname   The nickname of the user currently playing your app.
-*/
-+ (PlayAround*)sharedInstanceWithSecretKey:(NSString*)secret userId:(NSString*)userId userNickname:(NSString *)userNickname;
-
-/**
-* Returns initialized shared instance of PlayAround object
-* @param secretKey  Secret key of your PlayAround developer account.
-* @param userId     The ID of the user currently playing your app.
 * @param delegate   A delegate, used if you want to customize install prompt popup.
 */
-+ (PlayAround*)sharedInstanceWithSecretKey:(NSString*)secret userId:(NSString*)userId delegate:(id<PASDelegate>)delegate;
++ (PlayAround *)sharedInstanceWithSecretKey:(NSString *)secret userId:(NSString *)userId delegate:(id <PASDelegate>)delegate;
 
 /**
 * Returns initialized shared instance of PlayAround object
@@ -69,7 +70,7 @@ typedef void (^PASEventBlock)(PASError *error);
 * @param userNickname   The nickname of the user currently playing your app.
 * @param delegate       A delegate, used if you want to customize install prompt popup.
 */
-+ (PlayAround*)sharedInstanceWithSecretKey:(NSString*)secret userId:(NSString*)userId userNickname:(NSString *)userNickname delegate:(id<PASDelegate>)delegate;
++ (PlayAround *)sharedInstanceWithSecretKey:(NSString *)secret userId:(NSString *)userId userNickname:(NSString *)userNickname delegate:(id <PASDelegate>)delegate;
 
 /// ---------------------------------
 /// URL Scheme
@@ -87,12 +88,12 @@ typedef void (^PASEventBlock)(PASError *error);
 /**
 * Sets the ID of the user currently playing your app.
 */
-- (void)setUserId:(NSString*)userId;
+- (void)setUserId:(NSString *)userId;
 
 /**
 * Sets the nicknameof the user currently playing your app.
 */
-- (void)setUserNickname:(NSString*)nickname;
+- (void)setUserNickname:(NSString *)nickname;
 
 /// ---------------------------------
 /// Miscellaneous
@@ -143,7 +144,7 @@ typedef void (^PASEventBlock)(PASError *error);
 * @param userId             User ID of the external user.
 * @param completionBlock    The completion block, possibly with an error.
 */
-- (void)postAcquaintanceEvent:(NSString*)userId completion:(PASEventBlock)completionBlock;
+- (void)postAcquaintanceEvent:(NSString *)userId completion:(PASEventBlock)completionBlock;
 
 /**
 * Checks if a user has an acquaintance with the current user.
@@ -151,7 +152,11 @@ typedef void (^PASEventBlock)(PASError *error);
 * @param userId             The ID of the user.
 * @param completionBlock    The completion block with retrieved users or error.
 */
-- (void)isAcquaintedWith:(NSString*)userId completion:(PASIsUserAcquaintanceBlock)completionBlock;
+- (void)isAcquaintedWith:(NSString *)userId completion:(PASIsUserAcquaintanceBlock)completionBlock;
+
+- (void)openProfileOfUser:(PASUser *)user;
+
+- (void)openProfileOfUserWithId:(NSString *)userId;
 
 
 @end

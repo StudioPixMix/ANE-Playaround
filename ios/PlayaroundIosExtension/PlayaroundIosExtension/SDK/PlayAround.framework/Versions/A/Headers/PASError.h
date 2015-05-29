@@ -8,28 +8,31 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
-	PASErrorUncompatible,
-	PASErrorAvailableUsersNotLoaded,
-	PASErrorInitEmptySecretKey,
-	PASErrorInitEmptyUserId,
-	PASErrorInitIncorrectSecretKey,
-	PASErrorInternalSDK,
-	PASErrorWebservice,
-	PASErrorNetwork,
-	PASErrorUserDoeNotExist,
-	PASUnknowError,
-	PASWarningPlayAroundSDKNotInitialized,
-	PASWarningPlayAroundApplicationNotInstalled,
-	PASWarninSilentLoginUserNotLoggedIn
+typedef enum
+{
+    PASErrorIncompatible,
+    PASErrorAvailableUsersNotLoaded,
+    PASErrorInitEmptySecretKey,
+    PASErrorInitEmptyUserId,
+    PASErrorInitIncorrectSecretKey,
+    PASErrorInternalSDK,
+    PASErrorWebservice,
+    PASErrorNetwork,
+    PASErrorUserDoeNotExist,
+    PASUnknownError,
+    PASWarningPlayAroundSDKNotInitialized,
+    PASWarningPlayAroundApplicationNotInstalled,
+    PASWarningPlayAroundApplicationInstallation,
+    PASWarningSilentLoginUserNotLoggedIn
 } PlayAroundStatus;
 
 @interface PASError : NSError
 
-+ (PASError*)newWithType:(PlayAroundStatus)status;
-+ (PASError*)webserviceWithType:(NSDictionary*)errorInfo;
++ (PASError *)newWithType:(PlayAroundStatus)status;
 
-@property (nonatomic, readonly) NSString *message;
-@property (nonatomic, readonly) PlayAroundStatus status;
++ (PASError *)webserviceWithType:(NSDictionary *)errorInfo;
+
+@property(nonatomic, readonly) NSString *message;
+@property(nonatomic, readonly) PlayAroundStatus status;
 
 @end

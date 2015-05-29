@@ -53,11 +53,11 @@ DEFINE_ANE_FUNCTION(playaround_setUser) {
     // With delegate = custom prompt dialog
     
     if (useDefaultInstallPromptDialog == 1)
-        [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname];
-    else {
+        playaroundDelegate = nil;
+    else
         playaroundDelegate = [[PlayaroundDelegate alloc] initWithContext:context];
-        [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname delegate:playaroundDelegate];
-    }
+    
+    [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname delegate:playaroundDelegate];
     
     return NULL;
 }

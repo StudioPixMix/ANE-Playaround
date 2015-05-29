@@ -31,7 +31,7 @@
     
     if (playaroundErrorsToStrings == nil) {
         playaroundErrorsToStrings = @{
-                                      @(PASErrorUncompatible) :                         @"PASErrorUncompatible",
+                                      @(PASErrorIncompatible) :                         @"PASErrorIncompatible",
                                       @(PASErrorAvailableUsersNotLoaded) :              @"PASErrorAvailableUsersNotLoaded",
                                       @(PASErrorInitEmptySecretKey) :                   @"PASErrorInitEmptySecretKey",
                                       @(PASErrorInitEmptyUserId) :                      @"PASErrorInitEmptyUserId",
@@ -40,12 +40,14 @@
                                       @(PASErrorWebservice) :                           @"PASErrorWebservice",
                                       @(PASErrorNetwork) :                              @"PASErrorNetwork",
                                       @(PASErrorUserDoeNotExist) :                      @"PASErrorUserDoeNotExist",
-                                      @(PASUnknowError) :                               @"PASUnknowError",
+                                      @(PASUnknownError) :                              @"PASUnknownError",
                                       @(PASWarningPlayAroundSDKNotInitialized) :        @"PASWarningPlayAroundSDKNotInitialized",
                                       @(PASWarningPlayAroundApplicationNotInstalled) :  @"PASWarningPlayAroundApplicationNotInstalled",
-                                      @(PASWarninSilentLoginUserNotLoggedIn) :          @"PASWarninSilentLoginUserNotLoggedIn",
+                                      @(PASWarningSilentLoginUserNotLoggedIn) :         @"PASWarningSilentLoginUserNotLoggedIn",
                                       };
     }
+    
+    
     
     return playaroundErrorsToStrings;
 }
