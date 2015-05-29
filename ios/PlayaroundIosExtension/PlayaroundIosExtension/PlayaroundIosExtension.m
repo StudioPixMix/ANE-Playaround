@@ -1,4 +1,5 @@
 #import "PlayaroundDelegate.h"
+#import "PlayaroundDelegateWithInstallPrompt.h"
 #import "FlashRuntimeExtensions.h"
 #import <PlayAround/PlayAround.h>
 #import "PlayaroundTypeConversionHelper.h"
@@ -53,9 +54,9 @@ DEFINE_ANE_FUNCTION(playaround_setUser) {
     // With delegate = custom prompt dialog
     
     if (useDefaultInstallPromptDialog == 1)
-        playaroundDelegate = nil;
-    else
         playaroundDelegate = [[PlayaroundDelegate alloc] initWithContext:context];
+    else
+        playaroundDelegate = [[PlayaroundDelegateWithInstallPrompt alloc] initWithContext:context];
     
     [PlayAround sharedInstanceWithSecretKey:secretKey userId:userId userNickname:userNickname delegate:playaroundDelegate];
     

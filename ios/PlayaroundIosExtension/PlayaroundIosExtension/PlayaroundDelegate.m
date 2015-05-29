@@ -15,12 +15,6 @@
     return self;
 }
 
-- (void) promptForInstallingPlayAroundApplication:(id<PASInstallationMessageDelegate>)installationMessageDelegate {
-    DISPATCH_LOG_EVENT(self.context, @"Prompt for installing Playaround app.");
-    
-    DISPATCH_ANE_EVENT(self.context, EVENT_SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT, (uint8_t*)[@"" UTF8String]);
-}
-
 - (void) needsAcquaintancesRefresh {
     DISPATCH_LOG_EVENT(self.context, @"Needs acquaintances refresh");
 

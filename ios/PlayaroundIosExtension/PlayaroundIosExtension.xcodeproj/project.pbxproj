@@ -12,6 +12,7 @@
 		019A0C8E1ACA8D0C00F60A26 /* PlayaroundDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C8D1ACA8D0C00F60A26 /* PlayaroundDelegate.m */; };
 		019A0C911ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C901ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.m */; };
 		019A0C951ACAC90B00F60A26 /* PlayaroundJsonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 019A0C941ACAC90B00F60A26 /* PlayaroundJsonObject.m */; };
+		6D8D40F31B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D8D40F21B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,8 @@
 		019A0C921ACAC2C300F60A26 /* ExtensionDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionDefs.h; sourceTree = "<group>"; };
 		019A0C931ACAC90B00F60A26 /* PlayaroundJsonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayaroundJsonObject.h; sourceTree = "<group>"; };
 		019A0C941ACAC90B00F60A26 /* PlayaroundJsonObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayaroundJsonObject.m; sourceTree = "<group>"; };
+		6D8D40F11B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayaroundDelegateWithInstallPrompt.h; sourceTree = "<group>"; };
+		6D8D40F21B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayaroundDelegateWithInstallPrompt.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +75,8 @@
 		019A0C6F1ACA861F00F60A26 /* PlayaroundIosExtension */ = {
 			isa = PBXGroup;
 			children = (
+				6D8D40F11B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.h */,
+				6D8D40F21B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.m */,
 				019A0C8F1ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.h */,
 				019A0C901ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.m */,
 				019A0C8B1ACA8C7D00F60A26 /* FlashRuntimeExtensions.h */,
@@ -152,6 +157,7 @@
 				019A0C911ACA93BA00F60A26 /* PlayaroundTypeConversionHelper.m in Sources */,
 				019A0C951ACAC90B00F60A26 /* PlayaroundJsonObject.m in Sources */,
 				019A0C731ACA861F00F60A26 /* PlayaroundIosExtension.m in Sources */,
+				6D8D40F31B18B58400401572 /* PlayaroundDelegateWithInstallPrompt.m in Sources */,
 				019A0C8E1ACA8D0C00F60A26 /* PlayaroundDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
