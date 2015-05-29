@@ -50,6 +50,7 @@ package {
 			addButton("Post acquaintance", postAcquaintanceEvent);
 			addButton("Get acquaintances", getAcquaintances);
 			addButton("is acquaintance", isAcquaintance);
+			addButton("Open user profile", openUserProfile);
 			addButton("Accept install", acceptInstall);
 			addButton("Refuse install", refuseInstall);
 		}
@@ -85,7 +86,7 @@ package {
 		/////////////////
 		
 		private function initPlayaround():void {
-			Playaround.init("TQeC6VaIeDcubhb916f5LQ", false, true);
+			Playaround.init("TQeC6VaIeDcubhb916f5LQ", true, true);
 			Playaround.addEventListener(Playaround.SHOULD_DISPLAY_CUSTOM_INSTALL_PROMPT, displayInstallPrompt);
 		}
 		
@@ -94,7 +95,7 @@ package {
 		}
 		
 		private function setUser():void {
-			Playaround.setUser("MyTestUser1", "My Test User Nickname");
+			Playaround.setUser("MyTestUser2", "My Test User Nickname");
 		}
 		
 		private function getAvailableUsers():void {
@@ -154,6 +155,30 @@ package {
 			Playaround.isAcquaintance(user.id,
 				function(isAcquaintance:Boolean):void {
 					trace(user.id + " is acquaintance ? " + isAcquaintance);
+				},
+				function(error:PlayaroundError):void {
+					trace("### Error : " + error);
+				}
+			);
+		}
+		
+		private function openUserProfile():void {
+			var users:Vector.<PlayaroundUser> = new Vector.<PlayaroundUser>();
+			if(acquaintances != null && acquaintances.length > 0)
+				users = users.concat(acquaintances);
+			if(availableUsers != null && availableUsers.length > 0)
+				users = users.concat(availableUsers);
+			
+			if(users.length == 0) {
+				trace("No users.");
+				return;
+			}
+			
+			var user:PlayaroundUser = users[Math.round(Math.random() * (users.length - 1))];
+			
+			Playaround.openUserProfile(user.id,
+				function():void {
+					trace(user.id + " profile opened");
 				},
 				function(error:PlayaroundError):void {
 					trace("### Error : " + error);

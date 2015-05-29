@@ -154,7 +154,8 @@ package com.studiopixmix.playaround {
 			log("Playaround user set succesfully.");
 		}
 		/**
-		 * Get the list of single users near the current user.
+		 * Get the list of single users near the current user. While displaying a list of available single users to your user, 
+		 * listen to <code>NEED_AVAILABLE_USERS_REFRESH</code> event to refresh the displayed list of single users.
 		 * 
 		 * @param onSuccess	function(users:Vector.&lt;PlayaroundUser&gt;):void
 		 * @param onFailure	function(error:PlayaroundError):void
