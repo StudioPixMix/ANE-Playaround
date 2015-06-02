@@ -1,7 +1,7 @@
 //
 //  PlayAround.h
 //  PlayAroundSDK
-//  0.2.2
+//  0.2.3
 //
 //  Created by Benjamin Combes on 07/03/15.
 //  Copyright (c) 2015 Benjamin Combes. All rights reserved.
@@ -45,6 +45,8 @@ typedef void (^PASEventBlock)(PASError *error);
 @interface PlayAround : NSObject <PASInstallationMessageDelegate>
 
 @property(nonatomic, assign) id <PASDelegate> delegate;
+
+@property(nonatomic) BOOL isGettingAvailableUsers;
 
 /**
 * Returns shared instance of PlayAround object. Must be initialized prior to use with any "sharedInstanceWith" method
