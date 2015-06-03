@@ -3,7 +3,7 @@ Air Native Extension for PlayAround on iOS and Android (ARM and x86)
 
 ### General info :
 - PlayAround Android SDK version : 0.2.1
-- PlayAround iOS SDK version : 0.2.3
+- PlayAround iOS SDK version : 0.2.4
  
 - Add this to your android manifest :
 

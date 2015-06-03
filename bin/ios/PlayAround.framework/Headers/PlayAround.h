@@ -1,7 +1,7 @@
 //
 //  PlayAround.h
 //  PlayAroundSDK
-//  0.2.3
+//  0.2.4
 //
 //  Created by Benjamin Combes on 07/03/15.
 //  Copyright (c) 2015 Benjamin Combes. All rights reserved.
